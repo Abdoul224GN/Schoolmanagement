@@ -32,17 +32,21 @@ public class GradeService {
         return GradeMapper.toDTO(optionalGrade.get());
     }
 
-    public void createGrade(GradeRequestDTO gradeRequestDTO) {
-        gradeRepository.save(GradeMapper.toEntity(gradeRequestDTO));
+    public GradeResponseDTO createGrade(GradeRequestDTO gradeRequestDTO) {
+        return GradeMapper.toDTO(gradeRepository.save(GradeMapper.toEntity(gradeRequestDTO)));
     }
 
-    public void updateGrade(Long id, GradeRequestDTO gradeRequestDTO) {
+    public GradeResponseDTO updateGrade(Long id, GradeRequestDTO gradeRequestDTO) {
         Grade grade = gradeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Le niveau n'existe pas"));
         grade.setName(gradeRequestDTO.name());
-        gradeRepository.save(grade);
+        return GradeMapper.toDTO(gradeRepository.save(grade));
     }
 
     public void deleteGrade(Long id) {
-        gradeRepository.deleteById(id);
+        Optional<Grade> grade = gradeRepository.findById(id);
+        if (grade.isPresent()) {
+            gradeRepository.deleteById(id);
+        } else throw new ResourceNotFoundException("Le niveau n'existe pas");
+
     }
 }
