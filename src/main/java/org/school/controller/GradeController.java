@@ -24,7 +24,7 @@ public class GradeController {
         return ResponseEntity.status(HttpStatus.OK).body(gradeService.getAllGrade());
     }
 
-    @PostMapping(path = "{id}")
+    @GetMapping(path = "{id}")
     public ResponseEntity<GradeResponseDTO> getGrade(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(gradeService.getGradeById(id));
     }
