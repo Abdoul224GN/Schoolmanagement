@@ -2,8 +2,8 @@ package org.school.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDate;
 
@@ -11,6 +11,9 @@ import java.time.LocalDate;
 @Table(name = "enseignant")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Teacher extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,27 +22,27 @@ public class Teacher extends AbstractEntity {
 
 
     @NotNull
-    @Column(name = "prenom", nullable = false)
+    @Column(name = "prenom")
     private String firstName;
 
     @NotNull
-    @Column(name = "nom", nullable = false)
+    @Column(name = "nom")
     private String lastName;
 
     @NotNull
-    @Column(name = "sexe", nullable = false)
+    @Column(name = "sexe")
     private String sex;
 
     @NotNull
-    @Column(name = "date_naissance", nullable = false)
+    @Column(name = "date_naissance")
     private LocalDate birthDate;
 
     @NotNull
-    @Column(name = "telephone", nullable = false)
+    @Column(name = "telephone")
     private String phone;
 
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "photo")
