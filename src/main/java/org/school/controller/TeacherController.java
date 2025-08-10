@@ -1,0 +1,45 @@
+package org.school.controller;
+
+import lombok.AllArgsConstructor;
+import org.school.dto.TeacherRequestDTO;
+import org.school.dto.TeacherResponseDTO;
+import org.school.service.TeacherService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(path = "api/teacher")
+@AllArgsConstructor
+public class TeacherController {
+
+    TeacherService teacherService;
+
+    @GetMapping
+    public ResponseEntity<List<TeacherResponseDTO>> getAllTeacher() {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers());
+    }
+
+    @GetMapping(path = "{id}")
+    public ResponseEntity<TeacherResponseDTO> getTeacherById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getTeacherById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<TeacherResponseDTO> createTeacher(@RequestBody TeacherRequestDTO teacher) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(teacherService.createTeacher(teacher));
+    }
+
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
+        teacherService.deleteTeacher(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping(path = "{id}")
+    public ResponseEntity<TeacherResponseDTO> updateTeacher(@PathVariable Long id, @RequestBody TeacherRequestDTO teacher) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.updateTeacher(id, teacher));
+    }
+}
