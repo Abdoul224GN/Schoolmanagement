@@ -3,9 +3,10 @@ package org.school.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "enseignant")
@@ -47,4 +48,12 @@ public class Teacher extends AbstractEntity {
 
     @Column(name = "photo")
     private String photo;
+
+
+    @ManyToMany()
+    @JoinTable(name = "matiere_enseignant",
+            joinColumns = @JoinColumn(name = "enseignant_id"),
+            inverseJoinColumns = @JoinColumn(name = "matiere_id"))
+    private Set<Subject> subjects = new LinkedHashSet<>();
+
 }
