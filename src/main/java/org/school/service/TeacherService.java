@@ -24,7 +24,7 @@ public class TeacherService {
 
     public TeacherResponseDTO getTeacherById(Long id) {
         Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvé"));
-        return TeacherMapper.toDTO(teacher);
+        return TeacherMapper.toDTOWithSubject(teacher);
     }
 
     public TeacherResponseDTO createTeacher(TeacherRequestDTO teacherRequestDTO) {

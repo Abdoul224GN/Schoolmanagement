@@ -4,6 +4,8 @@ import org.school.dto.TeacherRequestDTO;
 import org.school.dto.TeacherResponseDTO;
 import org.school.entity.Teacher;
 
+import java.util.stream.Collectors;
+
 public class TeacherMapper {
 
     public static TeacherResponseDTO toDTO(Teacher entity) {
@@ -29,5 +31,20 @@ public class TeacherMapper {
         teacher.setPhone(dto.phone());
         teacher.setPhoto(dto.photo());
         return teacher;
+    }
+
+    public static TeacherResponseDTO toDTOWithSubject(Teacher entity) {
+        return TeacherResponseDTO.builder()
+                .id(entity.getId())
+                .name(entity.getFirstName() + " " + entity.getLastName())
+                .sex(entity.getSex())
+                .birthDate(entity.getBirthDate())
+                .phone(entity.getPhone())
+                .email(entity.getEmail())
+                .photo(entity.getPhoto())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .subjects(entity.getSubjects().stream().map(SubjectMapper::toDTO).collect(Collectors.toSet()))
+                .build();
     }
 }

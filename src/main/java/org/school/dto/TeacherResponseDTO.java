@@ -1,10 +1,11 @@
 package org.school.dto;
 
 import lombok.Builder;
+import org.school.entity.Teacher;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import org.school.entity.Teacher;
+import java.util.Set;
 
 /**
  * DTO for {@link Teacher}
@@ -19,6 +20,7 @@ public record TeacherResponseDTO(
         String email,
         String photo,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        Set<SubjectResponseDTO> subjects
 ) {
 }
