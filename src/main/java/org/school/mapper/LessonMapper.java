@@ -3,7 +3,7 @@ package org.school.mapper;
 import org.school.dto.LessonRequestDTO;
 import org.school.dto.LessonResponseDTO;
 import org.school.entity.Lesson;
-import org.school.repository.LessonRepository;
+import org.school.exception.ResourceNotFoundException;
 import org.school.repository.SubjectRepository;
 
 public class LessonMapper {
@@ -15,7 +15,7 @@ public class LessonMapper {
                 .startTime(lesson.getStartTime())
                 .endTime(lesson.getEndTime())
                 .createdAt(lesson.getCreatedAt())
-                .subject(lesson.getSubject())
+                .subject(SubjectMapper.toDTO(lesson.getSubject()))
                 .updatedAt(lesson.getUpdatedAt()).build();
     }
 
@@ -25,7 +25,7 @@ public class LessonMapper {
         lesson.setDay(dto.day());
         lesson.setStartTime(dto.startTime());
         lesson.setEndTime(dto.endTime());
-        lesson.setSubject(subjectRepository.findById(dto.subjectId()).get());
+        lesson.setSubject(subjectRepository.findById(dto.subjectId()).orElseThrow(()-> new ResourceNotFoundException("Leçon ")));
         return lesson;
     }
 

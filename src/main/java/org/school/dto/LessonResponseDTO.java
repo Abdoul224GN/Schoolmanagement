@@ -17,7 +17,7 @@ public record LessonResponseDTO(
         LocalDate day,
         LocalTime startTime,
         LocalTime endTime,
-        Subject subject,
+        SubjectResponseDTO subject,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
