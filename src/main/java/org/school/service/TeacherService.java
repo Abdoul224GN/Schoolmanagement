@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.school.dto.TeacherRequestDTO;
 import org.school.dto.TeacherResponseDTO;
+import org.school.entity.Subject;
 import org.school.entity.Teacher;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.TeacherMapper;
@@ -12,6 +13,8 @@ import org.school.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,18 +38,23 @@ public class TeacherService {
     }
 
     @Transactional
-    public TeacherResponseDTO updateTeacher(Long id, TeacherRequestDTO teacherRequestDTO) {
-        Teacher teacher1 = teacherRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvé"));
-        teacher1 = Teacher.builder()
-                .id(teacher1.getId())
-                .firstName(teacherRequestDTO.firstName())
-                .lastName(teacherRequestDTO.lastName())
-                .sex(teacherRequestDTO.sex())
-                .birthDate(teacherRequestDTO.birthDate())
-                .phone(teacherRequestDTO.phone())
-                .email(teacherRequestDTO.email())
-                .photo(teacherRequestDTO.photo()).build();
-        return TeacherMapper.toDTO(teacherRepository.save(teacher1));
+    public TeacherResponseDTO updateTeacher(Long id, TeacherRequestDTO dto) {
+        Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvé"));
+        teacher.setFirstName(dto.firstName());
+        teacher.setLastName(dto.lastName());
+        teacher.setSex(dto.sex());
+        teacher.setBirthDate(dto.birthDate());
+        teacher.setPhone(dto.phone());
+        teacher.setEmail(dto.email());
+        teacher.setPhoto(dto.photo());
+        Set<Subject> updatedSubjects = dto.subjectIds().stream()
+                .map(subjectId -> subjectRepository.findById(subjectId).orElseThrow(() -> new ResourceNotFoundException("Matière introuvable : " + subjectId)))
+                .collect(Collectors.toSet());
+        teacher.getSubjects().forEach(subject -> subject.getTeachers().remove(teacher));
+        teacher.getSubjects().clear();
+        updatedSubjects.forEach(teacher::addSubject);
+        Teacher saved = teacherRepository.save(teacher);
+        return TeacherMapper.toDTOWithSubject(saved);
     }
 
     public void deleteTeacher(Long id) {
