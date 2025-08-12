@@ -7,6 +7,7 @@ import org.school.dto.TeacherResponseDTO;
 import org.school.entity.Teacher;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.TeacherMapper;
+import org.school.repository.SubjectRepository;
 import org.school.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class TeacherService {
 
     TeacherRepository teacherRepository;
+    SubjectRepository subjectRepository;
 
     public List<TeacherResponseDTO> getAllTeachers() {
         return teacherRepository.findAll().stream().map(TeacherMapper::toDTO).toList();
@@ -28,8 +30,8 @@ public class TeacherService {
     }
 
     public TeacherResponseDTO createTeacher(TeacherRequestDTO teacherRequestDTO) {
-        Teacher teacher = TeacherMapper.toEntity(teacherRequestDTO);
-        return TeacherMapper.toDTO(teacherRepository.save(teacher));
+        Teacher teacher = TeacherMapper.toEntityWithSubject(teacherRequestDTO, subjectRepository);
+        return TeacherMapper.toDTOWithSubject(teacherRepository.save(teacher));
     }
 
     @Transactional

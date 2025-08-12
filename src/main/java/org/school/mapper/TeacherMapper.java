@@ -2,7 +2,10 @@ package org.school.mapper;
 
 import org.school.dto.TeacherRequestDTO;
 import org.school.dto.TeacherResponseDTO;
+import org.school.entity.Subject;
 import org.school.entity.Teacher;
+import org.school.exception.ResourceNotFoundException;
+import org.school.repository.SubjectRepository;
 
 import java.util.stream.Collectors;
 
@@ -46,5 +49,14 @@ public class TeacherMapper {
                 .updatedAt(entity.getUpdatedAt())
                 .subjects(entity.getSubjects().stream().map(SubjectMapper::toDTO).collect(Collectors.toSet()))
                 .build();
+    }
+
+    public static Teacher toEntityWithSubject(TeacherRequestDTO dto, SubjectRepository subjectRepository) {
+        Teacher teacher = toEntity(dto);
+        for (Long subjectId : dto.subjectIds()) {
+            Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new ResourceNotFoundException("Les matière n'existe pas"));
+            teacher.addSubject(subject);
+        }
+        return teacher;
     }
 }

@@ -56,4 +56,9 @@ public class Teacher extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "matiere_id"))
     private Set<Subject> subjects = new LinkedHashSet<>();
 
+    public void addSubject(Subject subject) {
+        subjects.add(subject);
+        subject.getTeachers().add(this);
+    }
+
 }

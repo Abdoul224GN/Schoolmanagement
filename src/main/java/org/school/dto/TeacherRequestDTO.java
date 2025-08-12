@@ -1,9 +1,11 @@
 package org.school.dto;
 
-import java.time.LocalDate;
-
 import lombok.Builder;
 import org.school.entity.Teacher;
+
+import java.time.LocalDate;
+import java.util.Set;
+
 /**
  * DTO for {@link Teacher}
  */
@@ -15,6 +17,7 @@ public record TeacherRequestDTO(
         LocalDate birthDate,
         String phone,
         String email,
-        String photo
+        String photo,
+        Set<Long> subjectIds
 ) {
 }
