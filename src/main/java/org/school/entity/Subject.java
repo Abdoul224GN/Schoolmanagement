@@ -28,4 +28,7 @@ public class Subject extends AbstractEntity {
     @ManyToMany(mappedBy = "subjects")
     Set<Grade> grades = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "subject")
+    Set<Lesson> lessons = new LinkedHashSet<>();
+
 }
