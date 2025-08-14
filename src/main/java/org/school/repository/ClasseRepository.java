@@ -1,9 +1,9 @@
 package org.school.repository;
 
-import org.school.entity.Lesson;
+import org.school.entity.Classe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LessonRepository extends JpaRepository<Lesson, Long> {
+public interface ClasseRepository extends JpaRepository<Classe, Long> {
 }
