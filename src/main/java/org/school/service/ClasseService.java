@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.school.dto.ClasseRequestDTO;
 import org.school.dto.ClasseResponseDTO;
 import org.school.entity.Classe;
+import org.school.entity.Grade;
+import org.school.entity.Teacher;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.ClasseMapper;
 import org.school.repository.ClasseRepository;
@@ -26,7 +28,7 @@ public class ClasseService {
         return classeRepository.findAll().stream().map(ClasseMapper::toDTO).toList();
     }
 
-    public ClasseResponseDTO getLessonById(Long id) {
+    public ClasseResponseDTO getClassById(Long id) {
         return ClasseMapper.toDTO(classeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MESSAGE)));
     }
 
@@ -42,7 +44,11 @@ public class ClasseService {
 
     public ClasseResponseDTO updateClasse(Long id, ClasseRequestDTO classeRequestDTO) {
         Classe classe = classeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MESSAGE));
-        ClasseMapper.toEntity(classeRequestDTO, teacherRepository, gradeRepository);
+        classe.setName(classeRequestDTO.name());
+        Teacher supervisor = teacherRepository.findById(classeRequestDTO.supervisorId()).orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvé"));
+        classe.setSupervisor(supervisor);
+        Grade grade = gradeRepository.findById(classeRequestDTO.gradeId()).orElseThrow(() -> new ResourceNotFoundException("Niveau non trouvé"));
+        classe.setGrade(grade);
         return ClasseMapper.toDTO(classeRepository.save(classe));
     }
 
