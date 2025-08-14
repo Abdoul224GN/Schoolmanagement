@@ -1,5 +1,6 @@
 package org.school.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<FormatedMessageError> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         FormatedMessageError formatedMessageError = new FormatedMessageError();
-        formatedMessageError.setMessage(ex.getMessage());
+        formatedMessageError.setMessage("Argument invalide");
         formatedMessageError.setCode(400);
         formatedMessageError.setTimestamp(LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(formatedMessageError);
@@ -37,4 +38,14 @@ public class GlobalExceptionHandler {
         formatedMessageError.setTimestamp(LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(formatedMessageError);
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<FormatedMessageError> handleException(DataIntegrityViolationException ex) {
+        FormatedMessageError formatedMessageError = new FormatedMessageError();
+        formatedMessageError.setMessage("Violation de contrainte d'unicité");
+        formatedMessageError.setCode(500);
+        formatedMessageError.setTimestamp(LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(formatedMessageError);
+    }
+
 }
