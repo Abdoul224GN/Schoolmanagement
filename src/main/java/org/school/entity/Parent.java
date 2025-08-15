@@ -12,7 +12,7 @@ public class Parent extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "parent_id", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "prenom")
     private String firstName;
@@ -21,7 +21,7 @@ public class Parent extends AbstractEntity {
     private String lastName;
 
     @Column(name = "telephone")
-    private String phone;
+    private Integer phone;
 
     @Column(name = "photo")
     private String photo;
