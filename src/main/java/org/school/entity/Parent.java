@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -26,4 +29,6 @@ public class Parent extends AbstractEntity {
     @Column(name = "photo")
     private String photo;
 
+    @ManyToMany(mappedBy = "parents")
+    private Set<Student> students = new HashSet<>();
 }
