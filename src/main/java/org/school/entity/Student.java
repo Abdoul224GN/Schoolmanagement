@@ -5,12 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -51,20 +48,14 @@ public class Student extends AbstractEntity {
     @Column(name = "photo")
     private String photo;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<StudentParent> parents = new HashSet<>();
+    @ManyToMany()
+    @JoinTable(name = "parent_eleve",
+            joinColumns = @JoinColumn(name = "eleve_id"),
+            inverseJoinColumns = @JoinColumn(name = "parent_id"))
+    private Set<Parent> parents = new HashSet<>();
 
-    public void addParent(Parent parent, String relationshipType) {
-        StudentParent sp = new StudentParent();
-        sp.setStudent(this);
-        sp.setParent(parent);
-        sp.setRelationshipType(relationshipType);
-        parents.add(sp);
-        parent.getStudents().add(sp);
-    }
-
-    public void removeParent(Parent parent) {
-        parents.removeIf(sp -> sp.getParent().equals(parent));
-        parent.getStudents().removeIf(sp -> sp.getStudent().equals(this));
+    public void addParent(Parent parent){
+        parents.add(parent);
+        parent.getStudents().add(this);
     }
 }

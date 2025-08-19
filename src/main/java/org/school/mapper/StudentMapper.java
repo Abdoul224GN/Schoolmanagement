@@ -22,37 +22,28 @@ public class StudentMapper {
         student.setBirthDate(dto.birthDate());
         student.setAddress(dto.address());
         student.setPhoto(dto.photo());
-
-        if (dto.classeId() != null) {
-            classeRepository.findById(dto.classeId()).ifPresent(student::setClasse);
+        student.setClasse(classeRepository.findById(dto.classeId()).orElseThrow(() -> new ResourceNotFoundException("Classe non trouvée")));
+        for (Long id : dto.parentIds()) {
+            Parent parent = parentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Parent introuvable"));
+            student.addParent(parent);
         }
-
-        if (dto.parents() != null) {
-            dto.parents().forEach(rel -> {
-                Parent parent = parentRepository.findById(rel.parentId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
-                student.addParent(parent, rel.relationshipType());
-            });
-        }
-
         return student;
     }
 
     public static StudentResponseDTO toResponseDTO(Student student) {
-        Set<ParentResponseDTO> parents = student.getParents().stream()
-                .map(StudentParentMapper::toParentResponseDTO)
+        Set<ParentResponseDTO> mappedParents = student.getParents().stream()
+                .map(ParentMapper::toDTO)
                 .collect(Collectors.toSet());
 
-        return new StudentResponseDTO(
-                student.getId(),
-                student.getFirstName(),
-                student.getLastName(),
-                student.getSex(),
-                student.getBirthDate(),
-                student.getAddress(),
-                student.getPhoto(),
-                ClasseMapper.toDTO(student.getClasse()),
-                parents
-        );
+        return StudentResponseDTO.builder()
+                .id(student.getId())
+                .name(student.getFirstName() + " " + student.getLastName())
+                .sex(student.getSex())
+                .birthDate(student.getBirthDate())
+                .address(student.getAddress())
+                .photo(student.getPhoto())
+                .classe(ClasseMapper.toDTO(student.getClasse()))
+                .parents(mappedParents)
+                .build();
     }
 }

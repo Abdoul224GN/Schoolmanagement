@@ -11,5 +11,5 @@ public record StudentRequestDTO(
         String address,
         String photo,
         Long classeId,
-        Set<ParentRelationDTO> parents
+        Set<Long> parentIds
 ) {}

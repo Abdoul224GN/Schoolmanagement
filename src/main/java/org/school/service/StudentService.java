@@ -13,6 +13,8 @@ import org.school.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -37,34 +39,25 @@ public class StudentService {
     }
 
     public void deleteStudent(Long id) {
-        studentRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Elève non trouvé"));
+        studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
         studentRepository.deleteById(id);
     }
 
     public StudentResponseDTO updateStudent(Long id, StudentRequestDTO studentDTO) {
-        Student student = studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Elève non Trouvé"));
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
         student.setFirstName(studentDTO.firstName());
         student.setLastName(studentDTO.lastName());
         student.setSex(studentDTO.sex());
-        student.setBirthDate(studentDTO.birthDate());
         student.setAddress(studentDTO.address());
         student.setPhoto(studentDTO.photo());
-
-        if (studentDTO.classeId() != null) {
-            classeRepository.findById(studentDTO.classeId()).ifPresent(student::setClasse);
-        }
-
-        // Parents
-        student.getParents().clear(); // 🔥 méthode que tu dois avoir pour vider les anciennes relations
-        if (studentDTO.parents() != null) {
-            studentDTO.parents().forEach(rel -> {
-                Parent parent = parentRepository.findById(rel.parentId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
-                student.addParent(parent, rel.relationshipType());
-            });
-        }
-
-        Student updated = studentRepository.save(student);
-        return StudentMapper.toResponseDTO(updated);
+        student.setBirthDate(studentDTO.birthDate());
+        student.setClasse(classeRepository.findById(studentDTO.classeId()).orElseThrow(() -> new ResourceNotFoundException("Classe non trouvé")));
+        Set<Parent> parents = studentDTO.parentIds().stream().map(parentId -> parentRepository.findById(parentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"))).collect(Collectors.toSet());
+        student.getParents().forEach(parent -> parent.getStudents().remove(student));
+        student.getParents().clear();
+        parents.forEach(student::addParent);
+        studentRepository.save(student);
+        return StudentMapper.toResponseDTO(student);
     }
 }
