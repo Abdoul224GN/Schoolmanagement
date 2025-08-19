@@ -4,59 +4,71 @@ import lombok.AllArgsConstructor;
 import org.school.dto.StudentRequestDTO;
 import org.school.dto.StudentResponseDTO;
 import org.school.entity.Parent;
+import org.school.entity.ParentEleve;
 import org.school.entity.Student;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.StudentMapper;
 import org.school.repository.ClasseRepository;
+import org.school.repository.ParentEleveRepository;
 import org.school.repository.ParentRepository;
 import org.school.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class StudentService {
 
     private final ParentRepository parentRepository;
-    StudentRepository studentRepository;
-    ClasseRepository classeRepository;
+    private final StudentRepository studentRepository;
+    private final ClasseRepository classeRepository;
+    private final ParentEleveRepository parentEleveRepository;
 
     public List<StudentResponseDTO> getAllStudents() {
-        return studentRepository.findAll().stream().map(StudentMapper::toResponseDTO).toList();
+        return studentRepository.findAll().stream()
+                .map(StudentMapper::toResponseDTO)
+                .toList();
     }
 
     public StudentResponseDTO getStudentById(Long id) {
-        Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
-        return StudentMapper.toResponseDTO(studentRepository.save(student));
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Élève non trouvé"));
+        return StudentMapper.toResponseDTO(student);
     }
 
-    public StudentResponseDTO createStudent(StudentRequestDTO studentDTO) {
-        Student savedStudent = studentRepository.save(StudentMapper.toEntity(studentDTO, classeRepository, parentRepository));
-        return StudentMapper.toResponseDTO(savedStudent);
+    public StudentResponseDTO createStudent(StudentRequestDTO dto) {
+        Student student = StudentMapper.toEntity(dto, classeRepository, parentRepository);
+        Student saved = studentRepository.save(student);
+        return StudentMapper.toResponseDTO(saved);
     }
 
     public void deleteStudent(Long id) {
-        studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
-        studentRepository.deleteById(id);
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Élève non trouvé"));
+        studentRepository.delete(student);
     }
 
-    public StudentResponseDTO updateStudent(Long id, StudentRequestDTO studentDTO) {
-        Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
-        student.setFirstName(studentDTO.firstName());
-        student.setLastName(studentDTO.lastName());
-        student.setSex(studentDTO.sex());
-        student.setAddress(studentDTO.address());
-        student.setPhoto(studentDTO.photo());
-        student.setBirthDate(studentDTO.birthDate());
-        student.setClasse(classeRepository.findById(studentDTO.classeId()).orElseThrow(() -> new ResourceNotFoundException("Classe non trouvé")));
-        Set<Parent> parents = studentDTO.parentIds().stream().map(parentId -> parentRepository.findById(parentId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"))).collect(Collectors.toSet());
-        student.getParents().forEach(parent -> parent.getStudents().remove(student));
-        student.getParents().clear();
-        parents.forEach(student::addParent);
+    public StudentResponseDTO updateStudent(Long id, StudentRequestDTO dto) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Élève non trouvé"));
+        student.setFirstName(dto.firstName());
+        student.setLastName(dto.lastName());
+        student.setSex(dto.sex());
+        student.setAddress(dto.address());
+        student.setPhoto(dto.photo());
+        student.setBirthDate(dto.birthDate());
+        student.setClasse(classeRepository.findById(dto.classeId()).orElseThrow(() -> new ResourceNotFoundException("Classe non trouvée")));
+        parentEleveRepository.deleteAll(student.getParentRelations());
+        student.getParentRelations().clear();
+
+        dto.parentRelations().forEach(rel -> {
+            Parent parent = parentRepository.findById(rel.parentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
+            ParentEleve pe = new ParentEleve();
+            pe.setStudent(student);
+            pe.setParent(parent);
+            pe.setTypeRelation(rel.typeRelation());
+            student.getParentRelations().add(pe);
+        });
+
         studentRepository.save(student);
         return StudentMapper.toResponseDTO(student);
     }

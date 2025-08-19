@@ -29,6 +29,7 @@ public class Parent extends AbstractEntity {
     @Column(name = "photo")
     private String photo;
 
-    @ManyToMany(mappedBy = "parents")
-    private Set<Student> students = new HashSet<>();
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ParentEleve> studentRelations = new HashSet<>();
+
 }

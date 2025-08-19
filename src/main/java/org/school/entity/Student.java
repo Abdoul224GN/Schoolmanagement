@@ -48,14 +48,6 @@ public class Student extends AbstractEntity {
     @Column(name = "photo")
     private String photo;
 
-    @ManyToMany()
-    @JoinTable(name = "parent_eleve",
-            joinColumns = @JoinColumn(name = "eleve_id"),
-            inverseJoinColumns = @JoinColumn(name = "parent_id"))
-    private Set<Parent> parents = new HashSet<>();
-
-    public void addParent(Parent parent){
-        parents.add(parent);
-        parent.getStudents().add(this);
-    }
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ParentEleve> parentRelations = new HashSet<>();
 }

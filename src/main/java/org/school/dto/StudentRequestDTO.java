@@ -1,15 +1,16 @@
 package org.school.dto;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 public record StudentRequestDTO(
         String firstName,
         String lastName,
         String sex,
-        LocalDate birthDate,
         String address,
         String photo,
+        LocalDate birthDate,
         Long classeId,
-        Set<Long> parentIds
-) {}
+        List<ParentRelationDTO> parentRelations
+) {
+}
