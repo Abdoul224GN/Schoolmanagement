@@ -40,7 +40,7 @@ public class PresenceService {
         Presence presence = presenceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Presence non trouvé"));
         presence.setIsPresent(presenceRequestDTO.isPresent());
         presence.setComment(presenceRequestDTO.comment());
-        Lesson lesson = lessonRepository.findById(presenceRequestDTO.lessonID()).orElseThrow(() -> new ResourceNotFoundException("Leçon non trouvé"));
+        Lesson lesson = lessonRepository.findById(presenceRequestDTO.lessonId()).orElseThrow(() -> new ResourceNotFoundException("Leçon non trouvé"));
         presence.setLesson(lesson);
         Student student = studentRepository.findById(presenceRequestDTO.studentId()).orElseThrow(()-> new ResourceNotFoundException("Elève non trouvé"));
         presence.setStudent(student);

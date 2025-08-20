@@ -15,7 +15,7 @@ public class PresenceMapper {
                 .id(presence.getId())
                 .isPresent(presence.getIsPresent())
                 .comment(presence.getComment())
-                .student(StudentMapper.toResponseDTO(presence.getStudent()))
+                .studentName(presence.getStudent().getFirstName() + " " + presence.getStudent().getLastName())
                 .lesson(LessonMapper.toDTO(presence.getLesson()))
                 .build();
     }
@@ -26,7 +26,7 @@ public class PresenceMapper {
         presence.setComment(dto.comment());
         Student student = studentRepository.findById(dto.studentId()).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
         presence.setStudent(student);
-        Lesson lesson = lessonRepository.findById(dto.lessonID()).orElseThrow(()-> new ResourceNotFoundException("Lesson non trouvé"));
+        Lesson lesson = lessonRepository.findById(dto.lessonId()).orElseThrow(()-> new ResourceNotFoundException("Lesson non trouvé"));
         presence.setLesson(lesson);
         return presence;
     }

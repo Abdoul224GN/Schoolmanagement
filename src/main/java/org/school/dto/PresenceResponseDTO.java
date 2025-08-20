@@ -10,7 +10,7 @@ public record PresenceResponseDTO(
         Long id,
         Boolean isPresent,
         String comment,
-        StudentResponseDTO student,
+        String studentName,
         LessonResponseDTO lesson
 ) {
 }
