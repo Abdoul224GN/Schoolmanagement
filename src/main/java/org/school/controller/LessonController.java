@@ -3,13 +3,12 @@ package org.school.controller;
 import lombok.AllArgsConstructor;
 import org.school.dto.LessonRequestDTO;
 import org.school.dto.LessonResponseDTO;
+import org.school.dto.PaginationResponseDTO;
 import org.school.service.LessonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RestController
@@ -20,8 +19,8 @@ public class LessonController {
     LessonService lessonService;
 
     @GetMapping()
-    public ResponseEntity<List<LessonResponseDTO>> getAllLessons() {
-        return ResponseEntity.status(HttpStatus.OK).body(lessonService.getAllLessons());
+    public ResponseEntity<PaginationResponseDTO<LessonResponseDTO>> getAllLessons(@RequestParam Integer page, @RequestParam Integer size) {
+        return ResponseEntity.status(HttpStatus.OK).body(lessonService.getAllLessons(page, size));
     }
 
     @GetMapping(path = "{id}")

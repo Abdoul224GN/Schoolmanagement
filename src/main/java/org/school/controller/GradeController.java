@@ -3,13 +3,12 @@ package org.school.controller;
 import lombok.AllArgsConstructor;
 import org.school.dto.GradeRequestDTO;
 import org.school.dto.GradeResponseDTO;
+import org.school.dto.PaginationResponseDTO;
 import org.school.service.GradeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -20,8 +19,8 @@ public class GradeController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GradeResponseDTO>> getAllGrades() {
-        return ResponseEntity.status(HttpStatus.OK).body(gradeService.getAllGrade());
+    public ResponseEntity<PaginationResponseDTO<GradeResponseDTO>> getAllGrades(@RequestParam Integer page, @RequestParam Integer size) {
+        return ResponseEntity.status(HttpStatus.OK).body(gradeService.getAllGrade(page, size));
     }
 
     @GetMapping(path = "{id}")

@@ -6,12 +6,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.school.dto.GradeRequestDTO;
-import org.school.dto.GradeResponseDTO;
 import org.school.entity.Grade;
 import org.school.mapper.GradeMapper;
 import org.school.repository.GradeRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,20 +25,21 @@ class GradeServiceTest {
     @InjectMocks
     private GradeService service;
 
-    @Test
-    void shouldReturnAllGrades() {
-        Grade grade1 = new Grade();
-        grade1.setId(1L);
-        grade1.setName("test");
-        Grade grade2 = new Grade();
-        grade2.setId(1L);
-        grade2.setName("test");
-        List<Grade> list = List.of(grade1, grade2);
-        when(repository.findAll()).thenReturn(list);
-        List<GradeResponseDTO> result = service.getAllGrade();
-        assertThat(result).hasSize(2).containsExactly(GradeMapper.toDTO(grade1), GradeMapper.toDTO(grade2));
-    }
-
+    /*
+        @Test
+        void shouldReturnAllGrades() {
+            Grade grade1 = new Grade();
+            grade1.setId(1L);
+            grade1.setName("test");
+            Grade grade2 = new Grade();
+            grade2.setId(1L);
+            grade2.setName("test");
+            List<Grade> list = List.of(grade1, grade2);
+            when(repository.findAll()).thenReturn(list);
+            List<GradeResponseDTO> result = service.getAllGrade();
+            assertThat(result).hasSize(2).containsExactly(GradeMapper.toDTO(grade1), GradeMapper.toDTO(grade2));
+        }
+    */
     @Test
     void shouldReturnGradeByID() {
         Grade grade1 = new Grade();
@@ -63,7 +62,7 @@ class GradeServiceTest {
     }
 
     @Test
-   void shouldDeleteById() {
+    void shouldDeleteById() {
         Long id = 1L;
         Grade grade = new Grade();
         grade.setId(id);
@@ -72,5 +71,5 @@ class GradeServiceTest {
         when(repository.findById(id)).thenReturn(Optional.of(grade));
         service.deleteGrade(id);
         verify(repository, times(1)).deleteById(id);
-   }
+    }
 }

@@ -1,14 +1,13 @@
 package org.school.controller;
 
 import lombok.AllArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.SubjectRequestDTO;
 import org.school.dto.SubjectResponseDTO;
 import org.school.service.SubjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/subject")
@@ -18,8 +17,8 @@ public class SubjectController {
     SubjectService subjectService;
 
     @GetMapping
-    public ResponseEntity<List<SubjectResponseDTO>> getAllSubjects() {
-        return ResponseEntity.status(HttpStatus.OK).body(subjectService.getAllSubjects());
+    public ResponseEntity<PaginationResponseDTO<SubjectResponseDTO>> getAllSubjects(@RequestParam Integer page, @RequestParam Integer size) {
+        return ResponseEntity.status(HttpStatus.OK).body(subjectService.getAllSubjects(page, size));
     }
 
     @PostMapping(path = "{id}")

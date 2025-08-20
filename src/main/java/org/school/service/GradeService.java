@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import org.school.dto.GradeRequestDTO;
 import org.school.dto.GradeResponseDTO;
+import org.school.dto.PaginationResponseDTO;
 import org.school.entity.Grade;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.GradeMapper;
 import org.school.repository.GradeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +24,10 @@ public class GradeService {
 
     GradeRepository gradeRepository;
 
-    public List<GradeResponseDTO> getAllGrade() {
-        return gradeRepository.findAll().stream().map(GradeMapper::toDTO).toList();
+    public PaginationResponseDTO<GradeResponseDTO> getAllGrade(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<GradeResponseDTO> result = gradeRepository.findAll(pageable).map(GradeMapper::toDTO);
+        return new PaginationResponseDTO<>(result);
     }
 
     public GradeResponseDTO getGradeById(Long id) {

@@ -3,6 +3,7 @@ package org.school.service;
 import lombok.AllArgsConstructor;
 import org.school.dto.ClasseRequestDTO;
 import org.school.dto.ClasseResponseDTO;
+import org.school.dto.PaginationResponseDTO;
 import org.school.entity.Classe;
 import org.school.entity.Grade;
 import org.school.entity.Teacher;
@@ -11,9 +12,11 @@ import org.school.mapper.ClasseMapper;
 import org.school.repository.ClasseRepository;
 import org.school.repository.GradeRepository;
 import org.school.repository.TeacherRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -24,8 +27,10 @@ public class ClasseService {
     GradeRepository gradeRepository;
     static final String MESSAGE = "Classe non trouvé";
 
-    public List<ClasseResponseDTO> getAllClasses() {
-        return classeRepository.findAll().stream().map(ClasseMapper::toDTO).toList();
+    public PaginationResponseDTO<ClasseResponseDTO> getAllClasses(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<ClasseResponseDTO> result = classeRepository.findAll(pageable).map(ClasseMapper::toDTO);
+        return new PaginationResponseDTO<>(result);
     }
 
     public ClasseResponseDTO getClassById(Long id) {

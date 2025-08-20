@@ -1,23 +1,28 @@
 package org.school.service;
 
 import lombok.AllArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.ParentRequestDTO;
 import org.school.dto.ParentResponseDTO;
 import org.school.entity.Parent;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.ParentMapper;
 import org.school.repository.ParentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class ParentService {
     ParentRepository parentRepository;
 
-    public List<ParentResponseDTO> getAllParents() {
-        return parentRepository.findAll().stream().map(ParentMapper::toDTO).toList();
+    public PaginationResponseDTO<ParentResponseDTO> getAllParents(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
+        Page<ParentResponseDTO> result = parentRepository.findAll(pageable).map(ParentMapper::toDTO);
+        return new PaginationResponseDTO<>(result);
     }
 
     public ParentResponseDTO getParentById(Long id) {

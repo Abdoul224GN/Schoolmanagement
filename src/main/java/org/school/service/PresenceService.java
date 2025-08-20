@@ -1,6 +1,7 @@
 package org.school.service;
 
 import lombok.AllArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.PresenceRequestDTO;
 import org.school.dto.PresenceResponseDTO;
 import org.school.entity.Lesson;
@@ -11,9 +12,11 @@ import org.school.mapper.PresenceMapper;
 import org.school.repository.LessonRepository;
 import org.school.repository.PresenceRepository;
 import org.school.repository.StudentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -23,8 +26,10 @@ public class PresenceService {
     StudentRepository studentRepository;
     LessonRepository lessonRepository;
 
-    public List<PresenceResponseDTO> getAllPresences() {
-        return presenceRepository.findAll().stream().map(PresenceMapper::toDTO).toList();
+    public PaginationResponseDTO<PresenceResponseDTO> getAllPresences(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").ascending());
+        Page<PresenceResponseDTO> result = presenceRepository.findAll(pageable).map(PresenceMapper::toDTO);
+        return new PaginationResponseDTO<>(result);
     }
 
     public PresenceResponseDTO getPresenceById(Long id) {
@@ -42,14 +47,14 @@ public class PresenceService {
         presence.setComment(presenceRequestDTO.comment());
         Lesson lesson = lessonRepository.findById(presenceRequestDTO.lessonId()).orElseThrow(() -> new ResourceNotFoundException("Leçon non trouvé"));
         presence.setLesson(lesson);
-        Student student = studentRepository.findById(presenceRequestDTO.studentId()).orElseThrow(()-> new ResourceNotFoundException("Elève non trouvé"));
+        Student student = studentRepository.findById(presenceRequestDTO.studentId()).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
         presence.setStudent(student);
         presenceRepository.save(presence);
         return PresenceMapper.toDTO(presence);
     }
 
     public void deletePresence(Long id) {
-        presenceRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Presence non trouvé"));
+        presenceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Presence non trouvé"));
         presenceRepository.deleteById(id);
     }
 

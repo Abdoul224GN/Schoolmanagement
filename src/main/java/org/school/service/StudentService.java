@@ -1,6 +1,7 @@
 package org.school.service;
 
 import lombok.AllArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.StudentRequestDTO;
 import org.school.dto.StudentResponseDTO;
 import org.school.entity.Parent;
@@ -12,9 +13,11 @@ import org.school.repository.ClasseRepository;
 import org.school.repository.ParentEleveRepository;
 import org.school.repository.ParentRepository;
 import org.school.repository.StudentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,10 +28,10 @@ public class StudentService {
     private final ClasseRepository classeRepository;
     private final ParentEleveRepository parentEleveRepository;
 
-    public List<StudentResponseDTO> getAllStudents() {
-        return studentRepository.findAll().stream()
-                .map(StudentMapper::toResponseDTO)
-                .toList();
+    public PaginationResponseDTO<StudentResponseDTO> getAllStudents(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
+        Page<StudentResponseDTO> result = studentRepository.findAll(pageable).map(StudentMapper::toResponseDTO);
+        return new PaginationResponseDTO<>(result);
     }
 
     public StudentResponseDTO getStudentById(Long id) {

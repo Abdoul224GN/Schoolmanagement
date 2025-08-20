@@ -1,14 +1,13 @@
 package org.school.controller;
 
 import lombok.AllArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.ParentRequestDTO;
 import org.school.dto.ParentResponseDTO;
 import org.school.service.ParentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController()
 @RequestMapping(path = "api/parent")
@@ -18,8 +17,8 @@ public class ParentController {
     private ParentService parentService;
 
     @GetMapping
-    public ResponseEntity<List<ParentResponseDTO>> getAllParents() {
-        return ResponseEntity.status(HttpStatus.OK).body(parentService.getAllParents());
+    public ResponseEntity<PaginationResponseDTO<ParentResponseDTO>> getAllParents(@RequestParam Integer page, @RequestParam Integer size) {
+        return ResponseEntity.status(HttpStatus.OK).body(parentService.getAllParents(page, size));
     }
 
     @GetMapping(path = "{id}")

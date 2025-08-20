@@ -1,13 +1,12 @@
 package org.school.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.StudentRequestDTO;
 import org.school.dto.StudentResponseDTO;
 import org.school.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
@@ -18,8 +17,8 @@ public class StudentController {
 
     // ✅ Récupérer tous les élèves
     @GetMapping
-    public ResponseEntity<List<StudentResponseDTO>> getAllStudents() {
-        return ResponseEntity.ok(studentService.getAllStudents());
+    public ResponseEntity<PaginationResponseDTO<StudentResponseDTO>> getAllStudents(@RequestParam Integer page, @RequestParam Integer size) {
+        return ResponseEntity.ok(studentService.getAllStudents(page, size));
     }
 
     // ✅ Récupérer un élève par ID

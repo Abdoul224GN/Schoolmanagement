@@ -2,6 +2,7 @@ package org.school.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.TeacherRequestDTO;
 import org.school.dto.TeacherResponseDTO;
 import org.school.entity.Subject;
@@ -10,9 +11,12 @@ import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.TeacherMapper;
 import org.school.repository.SubjectRepository;
 import org.school.repository.TeacherRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,8 +27,10 @@ public class TeacherService {
     TeacherRepository teacherRepository;
     SubjectRepository subjectRepository;
 
-    public List<TeacherResponseDTO> getAllTeachers() {
-        return teacherRepository.findAll().stream().map(TeacherMapper::toDTO).toList();
+    public PaginationResponseDTO<TeacherResponseDTO> getAllTeachers(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
+        Page<TeacherResponseDTO> result = teacherRepository.findAll(pageable).map(TeacherMapper::toDTO);
+        return new PaginationResponseDTO<>(result);
     }
 
     public TeacherResponseDTO getTeacherById(Long id) {

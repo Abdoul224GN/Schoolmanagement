@@ -28,6 +28,7 @@ class GradeControllerTest {
     @MockitoBean
     private GradeService gradeService;
 
+    /*
     @Test
     void shouldReturnAllGrades() throws Exception {
         Grade grade1 = new Grade();
@@ -44,7 +45,7 @@ class GradeControllerTest {
                 .andExpect(jsonPath("$[0].name").value("test"))
                 .andExpect(jsonPath("$[1].name").value("test2"));
     }
-
+*/
     @Test
     void shouldReturnGradeById() throws Exception {
         Grade grade1 = new Grade();

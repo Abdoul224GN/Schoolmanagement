@@ -1,14 +1,13 @@
 package org.school.controller;
 
 import lombok.AllArgsConstructor;
+import org.school.dto.PaginationResponseDTO;
 import org.school.dto.TeacherRequestDTO;
 import org.school.dto.TeacherResponseDTO;
 import org.school.service.TeacherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/teacher")
@@ -18,8 +17,8 @@ public class TeacherController {
     TeacherService teacherService;
 
     @GetMapping
-    public ResponseEntity<List<TeacherResponseDTO>> getAllTeacher() {
-        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers());
+    public ResponseEntity<PaginationResponseDTO<TeacherResponseDTO>> getAllTeacher(@RequestParam Integer page, @RequestParam Integer size) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers(page, size));
     }
 
     @GetMapping(path = "{id}")
