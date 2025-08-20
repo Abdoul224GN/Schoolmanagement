@@ -50,4 +50,7 @@ public class Student extends AbstractEntity {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ParentEleve> parentRelations = new HashSet<>();
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Presence> presences = new HashSet<>();
 }
