@@ -8,6 +8,9 @@ import org.school.service.ParentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController()
 @RequestMapping(path = "api/parent")
@@ -40,5 +43,10 @@ public class ParentController {
     @PutMapping(path = "{id}")
     public ResponseEntity<ParentResponseDTO> updateParent(@PathVariable Long id, @RequestBody ParentRequestDTO parentRequestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(parentService.updateParent(id, parentRequestDTO));
+    }
+
+    @PostMapping(path = "{id}/photo")
+    public ResponseEntity<ParentResponseDTO> uploadPhoto(@PathVariable Long id, @RequestParam MultipartFile file) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(parentService.uploadPhoto(id, file));
     }
 }
