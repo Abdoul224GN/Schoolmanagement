@@ -2,6 +2,7 @@ package org.school.service;
 
 import jakarta.annotation.PostConstruct;
 import org.school.config.FileStorageProperties;
+import org.school.exception.FileTypeNotAllowedException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +37,6 @@ public class FileStorageService {
     }
 
     public String storeAndGetUrl(MultipartFile file) throws IOException {
-        validateSize(file);
         validateType(file);
 
         String original = StringUtils.cleanPath(file.getOriginalFilename());
@@ -61,18 +61,10 @@ public class FileStorageService {
         return filename;
     }
 
-    private void validateSize(MultipartFile file) {
-        if (file.getSize() > maxSize) {
-            throw new RuntimeException(
-                    "Taille dépassée : " + file.getSize() + " > " + maxSize
-            );
-        }
-    }
-
     private void validateType(MultipartFile file) {
         String mime = file.getContentType();
         if (mime == null || !allowedTypes.contains(mime)) {
-            throw new RuntimeException("Type MIME non autorisé : " + mime);
+            throw new FileTypeNotAllowedException("Type MIME non autorisé : " + mime);
         }
     }
 }
