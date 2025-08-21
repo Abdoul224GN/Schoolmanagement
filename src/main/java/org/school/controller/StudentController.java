@@ -7,6 +7,9 @@ import org.school.dto.StudentResponseDTO;
 import org.school.service.StudentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/students")
@@ -44,5 +47,10 @@ public class StudentController {
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(path = "{id}/photo")
+    ResponseEntity<StudentResponseDTO> uploadPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(studentService.uploadPhoto(id, file));
     }
 }

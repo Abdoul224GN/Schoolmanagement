@@ -18,6 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +30,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final ClasseRepository classeRepository;
     private final ParentEleveRepository parentEleveRepository;
+    private final FileStorageService fileStorageService;
 
     public PaginationResponseDTO<StudentResponseDTO> getAllStudents(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
@@ -76,5 +80,10 @@ public class StudentService {
         return StudentMapper.toResponseDTO(student);
     }
 
-    public StudentResponseDTO updatePhoto
+    public StudentResponseDTO uploadPhoto(Long id, MultipartFile file) throws IOException {
+        Student student= studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Elève non trouvé"));
+        String url = fileStorageService.storeAndGetUrl(file);
+        student.setPhoto(url);
+        return StudentMapper.toResponseDTO(studentRepository.save(student));
+    }
 }
