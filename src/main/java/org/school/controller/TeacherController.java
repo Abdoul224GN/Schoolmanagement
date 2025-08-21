@@ -8,6 +8,9 @@ import org.school.service.TeacherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping(path = "api/teacher")
@@ -40,5 +43,10 @@ public class TeacherController {
     @PutMapping(path = "{id}")
     public ResponseEntity<TeacherResponseDTO> updateTeacher(@PathVariable Long id, @RequestBody TeacherRequestDTO teacher) {
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.updateTeacher(id, teacher));
+    }
+
+    @PostMapping(path = "{id}/photo")
+    public ResponseEntity<TeacherResponseDTO> uploadPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.uploadPhoto(id,file));
     }
 }

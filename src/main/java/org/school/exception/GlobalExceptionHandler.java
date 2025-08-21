@@ -1,11 +1,13 @@
 package org.school.exception;
 
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +21,24 @@ public class GlobalExceptionHandler {
         formatedMessageError.setCode(404);
         formatedMessageError.setTimestamp(LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(formatedMessageError);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<FormatedMessageError> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
+        FormatedMessageError formatedMessageError = new FormatedMessageError();
+        formatedMessageError.setMessage("La taille de l'image dépasse la taille maximale autorisée");
+        formatedMessageError.setCode(413);
+        formatedMessageError.setTimestamp(LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(formatedMessageError);
+    }
+
+    @ExceptionHandler(FileTypeNotAllowedException.class)
+    public ResponseEntity<FormatedMessageError> handleTypeNotAllowedException(FileTypeNotAllowedException ex) {
+        FormatedMessageError formatedMessageError = new FormatedMessageError();
+        formatedMessageError.setMessage(ex.getMessage());
+        formatedMessageError.setCode(415);
+        formatedMessageError.setTimestamp(LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(formatedMessageError);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

@@ -13,10 +13,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @AllArgsConstructor
 public class ParentService {
+    private final FileStorageService fileStorageService;
     ParentRepository parentRepository;
 
     public PaginationResponseDTO<ParentResponseDTO> getAllParents(Integer page, Integer size) {
@@ -45,6 +49,13 @@ public class ParentService {
         parent.setLastName(parentRequestDTO.lastName());
         parent.setPhone(parentRequestDTO.phone());
         parent.setPhoto(parentRequestDTO.photo());
+        return ParentMapper.toDTO(parentRepository.save(parent));
+    }
+
+    public ParentResponseDTO uploadPhoto(Long id, MultipartFile file) throws IOException {
+        Parent parent = parentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Parent non trouvé"));
+        String url = fileStorageService.storeAndGetUrl(file);
+        parent.setPhoto(url);
         return ParentMapper.toDTO(parentRepository.save(parent));
     }
 }
