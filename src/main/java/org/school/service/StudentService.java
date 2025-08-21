@@ -75,4 +75,6 @@ public class StudentService {
         studentRepository.save(student);
         return StudentMapper.toResponseDTO(student);
     }
+
+    public StudentResponseDTO updatePhoto
 }

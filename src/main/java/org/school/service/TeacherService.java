@@ -16,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,7 @@ public class TeacherService {
 
     TeacherRepository teacherRepository;
     SubjectRepository subjectRepository;
+    FileStorageService fileStorageService;
 
     public PaginationResponseDTO<TeacherResponseDTO> getAllTeachers(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
@@ -66,5 +69,12 @@ public class TeacherService {
     public void deleteTeacher(Long id) {
         teacherRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Enseignant introuvable"));
         teacherRepository.deleteById(id);
+    }
+
+    public TeacherResponseDTO uploadPhoto(Long id, MultipartFile file) throws IOException {
+        Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvable"));
+        String url = fileStorageService.storeAndGetUrl(file);
+        teacher.setPhoto(url);
+        return TeacherMapper.toDTOWithSubject(teacherRepository.save(teacher));
     }
 }
