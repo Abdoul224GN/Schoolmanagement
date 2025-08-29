@@ -63,9 +63,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<FormatedMessageError> handleException(DataIntegrityViolationException ex) {
         FormatedMessageError formatedMessageError = new FormatedMessageError();
         formatedMessageError.setMessage("Violation de contrainte d'unicité");
-        formatedMessageError.setCode(500);
+        formatedMessageError.setCode(409);
         formatedMessageError.setTimestamp(LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(formatedMessageError);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(formatedMessageError);
     }
 
 }
