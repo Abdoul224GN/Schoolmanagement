@@ -19,8 +19,13 @@ public class GradeController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PaginationResponseDTO<GradeResponseDTO>> getAllGrades(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(gradeService.getAllGrade(page, size));
+    public ResponseEntity<PaginationResponseDTO<GradeResponseDTO>> getAllGrades(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+            ) {
+        return ResponseEntity.status(HttpStatus.OK).body(gradeService.getAllGrade(page, size, sortBy, direction));
     }
 
     @GetMapping(path = "{id}")

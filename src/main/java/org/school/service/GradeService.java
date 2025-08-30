@@ -24,8 +24,9 @@ public class GradeService {
 
     GradeRepository gradeRepository;
 
-    public PaginationResponseDTO<GradeResponseDTO> getAllGrade(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+    public PaginationResponseDTO<GradeResponseDTO> getAllGrade(Integer page, Integer size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<GradeResponseDTO> result = gradeRepository.findAll(pageable).map(GradeMapper::toDTO);
         return new PaginationResponseDTO<>(result);
     }
