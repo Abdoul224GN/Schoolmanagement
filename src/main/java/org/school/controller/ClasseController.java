@@ -16,8 +16,13 @@ public class ClasseController {
     ClasseService classeService;
 
     @GetMapping
-    public ResponseEntity<PaginationResponseDTO<ClasseResponseDTO>> getAllClasses(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(classeService.getAllClasses(page, size));
+    public ResponseEntity<PaginationResponseDTO<ClasseResponseDTO>> getAllClasses(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(classeService.getAllClasses(page, size, sortBy, direction));
     }
 
     @GetMapping(path = "{id}")

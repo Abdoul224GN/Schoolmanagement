@@ -19,8 +19,13 @@ public class LessonController {
     LessonService lessonService;
 
     @GetMapping()
-    public ResponseEntity<PaginationResponseDTO<LessonResponseDTO>> getAllLessons(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(lessonService.getAllLessons(page, size));
+    public ResponseEntity<PaginationResponseDTO<LessonResponseDTO>> getAllLessons(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(lessonService.getAllLessons(page, size, sortBy, direction));
     }
 
     @GetMapping(path = "{id}")

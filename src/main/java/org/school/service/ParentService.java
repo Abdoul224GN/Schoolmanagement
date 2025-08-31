@@ -23,8 +23,9 @@ public class ParentService {
     private final FileStorageService fileStorageService;
     ParentRepository parentRepository;
 
-    public PaginationResponseDTO<ParentResponseDTO> getAllParents(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
+    public PaginationResponseDTO<ParentResponseDTO> getAllParents(Integer page, Integer size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<ParentResponseDTO> result = parentRepository.findAll(pageable).map(ParentMapper::toDTO);
         return new PaginationResponseDTO<>(result);
     }

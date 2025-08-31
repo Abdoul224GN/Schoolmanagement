@@ -20,8 +20,13 @@ public class StudentController {
 
     // ✅ Récupérer tous les élèves
     @GetMapping
-    public ResponseEntity<PaginationResponseDTO<StudentResponseDTO>> getAllStudents(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.ok(studentService.getAllStudents(page, size));
+    public ResponseEntity<PaginationResponseDTO<StudentResponseDTO>> getAllStudents(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return ResponseEntity.ok(studentService.getAllStudents(page, size, sortBy, direction));
     }
 
     // ✅ Récupérer un élève par ID

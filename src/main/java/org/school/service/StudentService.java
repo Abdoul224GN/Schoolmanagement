@@ -32,8 +32,9 @@ public class StudentService {
     private final ParentEleveRepository parentEleveRepository;
     private final FileStorageService fileStorageService;
 
-    public PaginationResponseDTO<StudentResponseDTO> getAllStudents(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
+    public PaginationResponseDTO<StudentResponseDTO> getAllStudents(Integer page, Integer size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<StudentResponseDTO> result = studentRepository.findAll(pageable).map(StudentMapper::toResponseDTO);
         return new PaginationResponseDTO<>(result);
     }

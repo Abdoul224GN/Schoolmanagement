@@ -25,8 +25,9 @@ public class LessonService {
 
     static final String MESSAGE = "Leçon non trouvé";
 
-    public PaginationResponseDTO<LessonResponseDTO> getAllLessons(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+    public PaginationResponseDTO<LessonResponseDTO> getAllLessons(Integer page, Integer size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<LessonResponseDTO> result = lessonRepository.findAll(pageable).map(LessonMapper::toDTO);
         return new PaginationResponseDTO<>(result);
     }

@@ -17,8 +17,13 @@ public class PresenceController {
     PresenceService presenceService;
 
     @GetMapping
-    public ResponseEntity<PaginationResponseDTO<PresenceResponseDTO>> getAllPresence(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(presenceService.getAllPresences(page, size));
+    public ResponseEntity<PaginationResponseDTO<PresenceResponseDTO>> getAllPresence(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(presenceService.getAllPresences(page, size, sortBy, direction));
     }
 
     @GetMapping(path = "{id}")

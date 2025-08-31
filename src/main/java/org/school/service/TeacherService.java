@@ -30,8 +30,9 @@ public class TeacherService {
     SubjectRepository subjectRepository;
     FileStorageService fileStorageService;
 
-    public PaginationResponseDTO<TeacherResponseDTO> getAllTeachers(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
+    public PaginationResponseDTO<TeacherResponseDTO> getAllTeachers(Integer page, Integer size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<TeacherResponseDTO> result = teacherRepository.findAll(pageable).map(TeacherMapper::toDTO);
         return new PaginationResponseDTO<>(result);
     }

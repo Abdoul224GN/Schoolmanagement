@@ -17,8 +17,13 @@ public class SubjectController {
     SubjectService subjectService;
 
     @GetMapping
-    public ResponseEntity<PaginationResponseDTO<SubjectResponseDTO>> getAllSubjects(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(subjectService.getAllSubjects(page, size));
+    public ResponseEntity<PaginationResponseDTO<SubjectResponseDTO>> getAllSubjects(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(subjectService.getAllSubjects(page, size, sortBy, direction));
     }
 
     @PostMapping(path = "{id}")

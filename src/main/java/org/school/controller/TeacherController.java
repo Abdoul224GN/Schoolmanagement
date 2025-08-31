@@ -20,8 +20,13 @@ public class TeacherController {
     TeacherService teacherService;
 
     @GetMapping
-    public ResponseEntity<PaginationResponseDTO<TeacherResponseDTO>> getAllTeacher(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers(page, size));
+    public ResponseEntity<PaginationResponseDTO<TeacherResponseDTO>> getAllTeacher(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers(page, size, sortBy, direction));
     }
 
     @GetMapping(path = "{id}")
@@ -47,6 +52,6 @@ public class TeacherController {
 
     @PostMapping(path = "{id}/photo")
     public ResponseEntity<TeacherResponseDTO> uploadPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-        return ResponseEntity.status(HttpStatus.OK).body(teacherService.uploadPhoto(id,file));
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.uploadPhoto(id, file));
     }
 }
