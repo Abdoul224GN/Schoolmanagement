@@ -31,6 +31,15 @@ public class GradeService {
         return new PaginationResponseDTO<>(result);
     }
 
+    public PaginationResponseDTO<GradeResponseDTO> searchByName(String name) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<GradeResponseDTO> result = gradeRepository
+                .findByNameContainingIgnoreCaseOrderByNameAsc(name, pageable)
+                .map(GradeMapper::toDTO);
+
+        return new PaginationResponseDTO<>(result);
+    }
+
     public GradeResponseDTO getGradeById(Long id) {
         Optional<Grade> optionalGrade = gradeRepository.findById(id);
         if (optionalGrade.isEmpty()) {

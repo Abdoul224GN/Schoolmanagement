@@ -24,8 +24,13 @@ public class GradeController {
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
-            ) {
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(gradeService.getAllGrade(page, size, sortBy, direction));
+    }
+
+    @GetMapping(path = "/search")
+    public ResponseEntity<PaginationResponseDTO<GradeResponseDTO>> searchByName(@RequestParam String keyWord) {
+        return ResponseEntity.status(HttpStatus.OK).body(gradeService.searchByName(keyWord));
     }
 
     @GetMapping(path = "{id}")
