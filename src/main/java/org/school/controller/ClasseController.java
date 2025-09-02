@@ -25,6 +25,11 @@ public class ClasseController {
         return ResponseEntity.status(HttpStatus.OK).body(classeService.getAllClasses(page, size, sortBy, direction));
     }
 
+    @GetMapping(path = "/search")
+    public ResponseEntity<PaginationResponseDTO<ClasseResponseDTO>> searchByName(@RequestParam String keyWord) {
+        return ResponseEntity.status(HttpStatus.OK).body(classeService.searchByName(keyWord));
+    }
+
     @GetMapping(path = "{id}")
     public ResponseEntity<ClasseResponseDTO> getClasseById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(classeService.getClassById(id));

@@ -39,6 +39,15 @@ public class StudentService {
         return new PaginationResponseDTO<>(result);
     }
 
+    public PaginationResponseDTO<StudentResponseDTO> searchByName(String name) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<StudentResponseDTO> result = studentRepository
+                .findByFirstNameContainingIgnoreCaseOrderByFirstNameAsc(name, pageable)
+                .map(StudentMapper::toResponseDTO);
+
+        return new PaginationResponseDTO<>(result);
+    }
+
     public StudentResponseDTO getStudentById(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Élève non trouvé"));
         return StudentMapper.toResponseDTO(student);
@@ -82,7 +91,7 @@ public class StudentService {
     }
 
     public StudentResponseDTO uploadPhoto(Long id, MultipartFile file) throws IOException {
-        Student student= studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Elève non trouvé"));
+        Student student = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
         String url = fileStorageService.storeAndGetUrl(file);
         student.setPhoto(url);
         return StudentMapper.toResponseDTO(studentRepository.save(student));

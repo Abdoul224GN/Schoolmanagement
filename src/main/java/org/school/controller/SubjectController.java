@@ -26,6 +26,11 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.OK).body(subjectService.getAllSubjects(page, size, sortBy, direction));
     }
 
+    @GetMapping(path = "/search")
+    public ResponseEntity<PaginationResponseDTO<SubjectResponseDTO>> searchByName(@RequestParam String keyWord) {
+        return ResponseEntity.status(HttpStatus.OK).body(subjectService.searchByName(keyWord));
+    }
+
     @PostMapping(path = "{id}")
     public ResponseEntity<SubjectResponseDTO> getSubjectById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(subjectService.getSubjectById(id));

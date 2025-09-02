@@ -30,6 +30,14 @@ public class ParentService {
         return new PaginationResponseDTO<>(result);
     }
 
+    public PaginationResponseDTO<ParentResponseDTO> searchByName(String name) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ParentResponseDTO> result = parentRepository
+                .findByFirstNameContainingIgnoreCaseOrderByFirstNameAsc(name, pageable)
+                .map(ParentMapper::toDTO);
+        return new PaginationResponseDTO<>(result);
+    }
+
     public ParentResponseDTO getParentById(Long id) {
         Parent parent = parentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
         return ParentMapper.toDTO(parent);
@@ -54,7 +62,7 @@ public class ParentService {
     }
 
     public ParentResponseDTO uploadPhoto(Long id, MultipartFile file) throws IOException {
-        Parent parent = parentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Parent non trouvé"));
+        Parent parent = parentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
         String url = fileStorageService.storeAndGetUrl(file);
         parent.setPhoto(url);
         return ParentMapper.toDTO(parentRepository.save(parent));

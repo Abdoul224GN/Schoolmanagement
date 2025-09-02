@@ -29,6 +29,11 @@ public class ParentController {
         return ResponseEntity.status(HttpStatus.OK).body(parentService.getAllParents(page, size, sortBy, direction));
     }
 
+    @GetMapping(path = "/search")
+    public ResponseEntity<PaginationResponseDTO<ParentResponseDTO>> searchByName(@RequestParam String keyWord) {
+        return ResponseEntity.status(HttpStatus.OK).body(parentService.searchByName(keyWord));
+    }
+
     @GetMapping(path = "{id}")
     public ResponseEntity<ParentResponseDTO> getParent(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(parentService.getParentById(id));

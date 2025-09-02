@@ -37,6 +37,15 @@ public class TeacherService {
         return new PaginationResponseDTO<>(result);
     }
 
+    public PaginationResponseDTO<TeacherResponseDTO> searchByName(String name) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<TeacherResponseDTO> result = teacherRepository
+                .findByFirstNameContainingIgnoreCaseOrderByFirstNameAsc(name, pageable)
+                .map(TeacherMapper::toDTO);
+
+        return new PaginationResponseDTO<>(result);
+    }
+
     public TeacherResponseDTO getTeacherById(Long id) {
         Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvé"));
         return TeacherMapper.toDTOWithSubject(teacher);

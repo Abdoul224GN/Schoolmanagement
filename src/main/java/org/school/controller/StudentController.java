@@ -5,6 +5,7 @@ import org.school.dto.PaginationResponseDTO;
 import org.school.dto.StudentRequestDTO;
 import org.school.dto.StudentResponseDTO;
 import org.school.service.StudentService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,11 @@ public class StudentController {
             @RequestParam(defaultValue = "asc") String direction
     ) {
         return ResponseEntity.ok(studentService.getAllStudents(page, size, sortBy, direction));
+    }
+
+    @GetMapping(path = "/search")
+    public ResponseEntity<PaginationResponseDTO<StudentResponseDTO>> searchByName(@RequestParam String keyWord) {
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.searchByName(keyWord));
     }
 
     // ✅ Récupérer un élève par ID

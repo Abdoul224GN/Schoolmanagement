@@ -29,6 +29,11 @@ public class TeacherController {
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers(page, size, sortBy, direction));
     }
 
+    @GetMapping(path = "/search")
+    public ResponseEntity<PaginationResponseDTO<TeacherResponseDTO>> searchByName(@RequestParam String keyWord) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.searchByName(keyWord));
+    }
+
     @GetMapping(path = "{id}")
     public ResponseEntity<TeacherResponseDTO> getTeacherById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.getTeacherById(id));

@@ -32,6 +32,15 @@ public class LessonService {
         return new PaginationResponseDTO<>(result);
     }
 
+    public PaginationResponseDTO<LessonResponseDTO> searchByName(String name) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<LessonResponseDTO> result = lessonRepository
+                .findByNameContainingIgnoreCaseOrderByNameAsc(name, pageable)
+                .map(LessonMapper::toDTO);
+
+        return new PaginationResponseDTO<>(result);
+    }
+
     public LessonResponseDTO getLessonById(Long id) {
         Lesson lesson = lessonRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MESSAGE));
         return LessonMapper.toDTO(lesson);

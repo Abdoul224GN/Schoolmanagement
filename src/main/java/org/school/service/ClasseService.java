@@ -35,6 +35,15 @@ public class ClasseService {
         return new PaginationResponseDTO<>(result);
     }
 
+    public PaginationResponseDTO<ClasseResponseDTO> searchByName(String name) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ClasseResponseDTO> result = classeRepository
+                .findByNameContainingIgnoreCaseOrderByNameAsc(name, pageable)
+                .map(ClasseMapper::toDTO);
+
+        return new PaginationResponseDTO<>(result);
+    }
+
     public ClasseResponseDTO getClassById(Long id) {
         return ClasseMapper.toDTO(classeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MESSAGE)));
     }

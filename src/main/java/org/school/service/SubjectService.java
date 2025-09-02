@@ -27,6 +27,15 @@ public class SubjectService {
         return new PaginationResponseDTO<>(result);
     }
 
+    public PaginationResponseDTO<SubjectResponseDTO> searchByName(String name) {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<SubjectResponseDTO> result = subjectRepository
+                .findByNameContainingIgnoreCaseOrderByNameAsc(name, pageable)
+                .map(SubjectMapper::toDTO);
+
+        return new PaginationResponseDTO<>(result);
+    }
+
     public SubjectResponseDTO getSubjectById(Long id) {
         Subject subject = subjectRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("La matière n'existe pas"));
         return SubjectMapper.toDTO(subject);
