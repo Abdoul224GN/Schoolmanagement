@@ -13,7 +13,8 @@ import java.util.Set;
 @Builder
 public record TeacherResponseDTO(
         Long id,
-        String name,
+        String firstName,
+        String lastName,
         String sex,
         LocalDate birthDate,
         String phone,

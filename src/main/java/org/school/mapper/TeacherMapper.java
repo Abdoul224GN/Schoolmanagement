@@ -14,7 +14,8 @@ public class TeacherMapper {
     public static TeacherResponseDTO toDTO(Teacher entity) {
         return TeacherResponseDTO.builder()
                 .id(entity.getId())
-                .name(entity.getFirstName() + " " + entity.getLastName())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
                 .sex(entity.getSex())
                 .birthDate(entity.getBirthDate())
                 .phone(entity.getPhone())
@@ -39,7 +40,8 @@ public class TeacherMapper {
     public static TeacherResponseDTO toDTOWithSubject(Teacher entity) {
         return TeacherResponseDTO.builder()
                 .id(entity.getId())
-                .name(entity.getFirstName() + " " + entity.getLastName())
+                .firstName(entity.getFirstName())
+                .lastName(entity.getLastName())
                 .sex(entity.getSex())
                 .birthDate(entity.getBirthDate())
                 .phone(entity.getPhone())
