@@ -5,6 +5,8 @@ import org.school.dto.PaginationResponseDTO;
 import org.school.dto.TeacherRequestDTO;
 import org.school.dto.TeacherResponseDTO;
 import org.school.service.TeacherService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class TeacherController {
     public ResponseEntity<PaginationResponseDTO<TeacherResponseDTO>> getAllTeacher(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "firstName") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers(page, size, sortBy, direction));
@@ -58,5 +60,16 @@ public class TeacherController {
     @PostMapping(path = "{id}/photo")
     public ResponseEntity<TeacherResponseDTO> uploadPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.uploadPhoto(id, file));
+    }
+
+    @GetMapping("/{id}/photo")
+    public ResponseEntity<Resource> getPhoto(@PathVariable Long id) throws Exception {
+        Resource resource = teacherService.getPhotoByTeacherId(id);
+
+        if (resource == null) return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }

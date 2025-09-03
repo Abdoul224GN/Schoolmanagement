@@ -11,6 +11,8 @@ import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.TeacherMapper;
 import org.school.repository.SubjectRepository;
 import org.school.repository.TeacherRepository;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -86,5 +90,22 @@ public class TeacherService {
         String url = fileStorageService.storeAndGetUrl(file);
         teacher.setPhoto(url);
         return TeacherMapper.toDTOWithSubject(teacherRepository.save(teacher));
+    }
+
+    private final Path uploadRoot = Paths.get("uploads").toAbsolutePath().normalize();
+
+    public Resource getPhotoByTeacherId(Long id) throws Exception {
+        Teacher teacher = teacherRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvé"));
+
+        String photoName = teacher.getPhoto();
+        if (photoName == null) return null;
+
+        Path filePath = uploadRoot.resolve(photoName).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (!resource.exists() || !resource.isReadable()) return null;
+
+        return resource;
     }
 }
