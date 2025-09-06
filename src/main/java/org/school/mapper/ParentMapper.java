@@ -9,7 +9,8 @@ public class ParentMapper {
     public static ParentResponseDTO toDTO(Parent parent) {
         return ParentResponseDTO.builder()
                 .id(parent.getId())
-                .name(parent.getFirstName() + " " + parent.getLastName())
+                .firstName(parent.getFirstName())
+                .lastName(parent.getLastName())
                 .phone(parent.getPhone())
                 .photo(parent.getPhoto())
                 .createdAt(parent.getCreatedAt())

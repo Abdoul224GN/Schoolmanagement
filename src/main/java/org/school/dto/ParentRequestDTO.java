@@ -6,7 +6,7 @@ package org.school.dto;
 public record ParentRequestDTO (
         String firstName,
         String lastName,
-        Integer phone,
+        String phone,
         String photo
 ) {
 }

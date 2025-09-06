@@ -10,8 +10,9 @@ import java.time.LocalDateTime;
 @Builder
 public record ParentResponseDTO(
         Long id,
-        String name,
-        Integer phone,
+        String firstName,
+        String lastName,
+        String phone,
         String photo,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
