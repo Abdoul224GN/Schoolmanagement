@@ -57,14 +57,12 @@ public class ParentService {
         parent.setFirstName(parentRequestDTO.firstName());
         parent.setLastName(parentRequestDTO.lastName());
         parent.setPhone(parentRequestDTO.phone());
-        parent.setPhoto(parentRequestDTO.photo());
         return ParentMapper.toDTO(parentRepository.save(parent));
     }
 
     public ParentResponseDTO uploadPhoto(Long id, MultipartFile file) throws IOException {
         Parent parent = parentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Parent non trouvé"));
         String url = fileStorageService.storeAndGetUrl(file);
-        parent.setPhoto(url);
         return ParentMapper.toDTO(parentRepository.save(parent));
     }
 }

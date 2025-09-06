@@ -11,8 +11,9 @@ public class ParentMapper {
                 .id(parent.getId())
                 .firstName(parent.getFirstName())
                 .lastName(parent.getLastName())
+                .address(parent.getAddress())
+                .occupation(parent.getOccupation())
                 .phone(parent.getPhone())
-                .photo(parent.getPhoto())
                 .createdAt(parent.getCreatedAt())
                 .updatedAt(parent.getUpdatedAt())
                 .build();
@@ -22,8 +23,9 @@ public class ParentMapper {
         Parent parent = new Parent();
         parent.setFirstName(dto.firstName());
         parent.setLastName(dto.lastName());
+        parent.setAddress(dto.address());
+        parent.setOccupation(dto.occupation());
         parent.setPhone(dto.phone());
-        parent.setPhoto(dto.photo());
         return parent;
     }
 }

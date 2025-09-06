@@ -12,8 +12,9 @@ public record ParentResponseDTO(
         Long id,
         String firstName,
         String lastName,
+        String address,
+        String occupation,
         String phone,
-        String photo,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
 }
