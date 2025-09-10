@@ -15,12 +15,14 @@ public class StudentMapper {
     public static StudentResponseDTO toResponseDTO(Student student) {
         return StudentResponseDTO.builder()
                 .id(student.getId())
-                .name(student.getFirstName() + " " + student.getLastName())
+                .firstName(student.getFirstName())
+                .lastName(student.getLastName())
                 .sex(student.getSex())
                 .address(student.getAddress())
                 .photo(student.getPhoto())
                 .birthDate(student.getBirthDate())
-                .classe(ClasseMapper.toDTO(student.getClasse()))
+                .classeId(student.getClasse().getId())
+                .classe(student.getClasse().getName())
                 .parentRelations(
                         student.getParentRelations().stream()
                                 .map(rel -> new ParentRelationResponseDTO(ParentMapper.toDTO(rel.getParent()), rel.getTypeRelation()))

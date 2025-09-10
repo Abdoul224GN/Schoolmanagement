@@ -7,12 +7,15 @@ import org.school.dto.StudentResponseDTO;
 import org.school.entity.Parent;
 import org.school.entity.ParentEleve;
 import org.school.entity.Student;
+import org.school.entity.Teacher;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.StudentMapper;
 import org.school.repository.ClasseRepository;
 import org.school.repository.ParentEleveRepository;
 import org.school.repository.ParentRepository;
 import org.school.repository.StudentRepository;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 @AllArgsConstructor
@@ -95,5 +100,22 @@ public class StudentService {
         String url = fileStorageService.storeAndGetUrl(file);
         student.setPhoto(url);
         return StudentMapper.toResponseDTO(studentRepository.save(student));
+    }
+
+    private final Path uploadRoot = Paths.get("uploads").toAbsolutePath().normalize();
+
+    public Resource getPhotoByTeacherId(Long id) throws Exception {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Enseignant non trouvé"));
+
+        String photoName = student.getPhoto();
+        if (photoName == null) return null;
+
+        Path filePath = uploadRoot.resolve(photoName).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (!resource.exists() || !resource.isReadable()) return null;
+
+        return resource;
     }
 }
