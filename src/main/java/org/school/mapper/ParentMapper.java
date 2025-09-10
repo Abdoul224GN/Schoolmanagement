@@ -2,7 +2,10 @@ package org.school.mapper;
 
 import org.school.dto.ParentRequestDTO;
 import org.school.dto.ParentResponseDTO;
+import org.school.dto.StudentResponseDTO;
 import org.school.entity.Parent;
+
+import java.util.stream.Collectors;
 
 public class ParentMapper {
 
@@ -14,7 +17,13 @@ public class ParentMapper {
                 .address(parent.getAddress())
                 .occupation(parent.getOccupation())
                 .phone(parent.getPhone())
-                .createdAt(parent.getCreatedAt())
+                .students(parent.getStudentRelations().stream()
+                        .map(rel -> StudentResponseDTO.builder()
+                                .id(rel.getStudent().getId())
+                                .firstName(rel.getStudent().getFirstName())
+                                .lastName(rel.getStudent().getLastName())
+                                .build()
+                        ).collect(Collectors.toSet())).createdAt(parent.getCreatedAt())
                 .updatedAt(parent.getUpdatedAt())
                 .build();
     }

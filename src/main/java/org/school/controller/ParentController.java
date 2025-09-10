@@ -23,7 +23,7 @@ public class ParentController {
     public ResponseEntity<PaginationResponseDTO<ParentResponseDTO>> getAllParents(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "firstName") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(parentService.getAllParents(page, size, sortBy, direction));

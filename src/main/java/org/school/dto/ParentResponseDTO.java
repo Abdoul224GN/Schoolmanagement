@@ -3,6 +3,7 @@ package org.school.dto;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * DTO for {@link org.school.entity.Parent}
@@ -15,6 +16,7 @@ public record ParentResponseDTO(
         String address,
         String occupation,
         String phone,
+        Set<StudentResponseDTO> students,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
 }
