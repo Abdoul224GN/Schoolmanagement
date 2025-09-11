@@ -1,8 +1,10 @@
 package org.school.dto;
 
 import lombok.Builder;
+import org.school.entity.Student;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * DTO for {@link org.school.entity.Classe}
@@ -13,6 +15,7 @@ public record ClasseResponseDTO(
         String name,
         TeacherResponseDTO supervisor,
         GradeResponseDTO grade,
+        List<StudentResponseDTO> students,
         LocalDateTime createdAt,
         LocalDateTime updatedAt) {
 }

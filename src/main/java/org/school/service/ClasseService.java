@@ -45,7 +45,7 @@ public class ClasseService {
     }
 
     public ClasseResponseDTO getClassById(Long id) {
-        return ClasseMapper.toDTO(classeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MESSAGE)));
+        return ClasseMapper.toDTOWithStudents(classeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(MESSAGE)));
     }
 
     public ClasseResponseDTO createClasse(ClasseRequestDTO classeRequestDTO) {

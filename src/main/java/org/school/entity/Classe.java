@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -25,4 +28,6 @@ public class Classe extends AbstractEntity {
     @JoinColumn(name = "niveau_id")
     private Grade grade;
 
+    @OneToMany(mappedBy = "classe")
+    private List<Student> students;
 }
