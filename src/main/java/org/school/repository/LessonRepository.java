@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
+    Page<Lesson> findByClasse_id(Long classeID, Pageable pageable);
     Page<Lesson> findByNameContainingIgnoreCaseOrderByNameAsc(String name, Pageable pageable);
 }

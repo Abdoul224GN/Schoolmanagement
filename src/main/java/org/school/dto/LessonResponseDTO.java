@@ -1,7 +1,6 @@
 package org.school.dto;
 
 import lombok.Builder;
-import org.school.entity.Subject;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +16,10 @@ public record LessonResponseDTO(
         LocalDate day,
         LocalTime startTime,
         LocalTime endTime,
-        SubjectResponseDTO subject,
+        Long subjectId,
+        String subject,
+        Long classeId,
+        String classe,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

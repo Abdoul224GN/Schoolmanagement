@@ -15,7 +15,6 @@ import org.school.repository.StudentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,10 +25,9 @@ public class PresenceService {
     StudentRepository studentRepository;
     LessonRepository lessonRepository;
 
-    public PaginationResponseDTO<PresenceResponseDTO> getAllPresences(Integer page, Integer size, String sortBy, String direction) {
-        Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page<PresenceResponseDTO> result = presenceRepository.findAll(pageable).map(PresenceMapper::toDTO);
+    public PaginationResponseDTO<PresenceResponseDTO> getAllPresences(Integer page, Integer size, Long lesson) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PresenceResponseDTO> result = presenceRepository.findPresenceByLesson_Id(lesson, pageable).map(PresenceMapper::toDTO);
         return new PaginationResponseDTO<>(result);
     }
 

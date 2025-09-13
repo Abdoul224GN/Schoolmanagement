@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 @EnableJpaAuditing
 @AllArgsConstructor
-public class SchoolApplication implements CommandLineRunner {
+public class SchoolApplication {
 
     private final LessonRepository lessonRepository;
     private final LessonService lessonService;
@@ -36,8 +36,4 @@ public class SchoolApplication implements CommandLineRunner {
         SpringApplication.run(SchoolApplication.class, args);
     }
 
-    @Override
-    @Transactional
-    public void run(String... args) throws Exception {
-    }
 }

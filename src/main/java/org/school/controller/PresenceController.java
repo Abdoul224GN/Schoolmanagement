@@ -20,10 +20,9 @@ public class PresenceController {
     public ResponseEntity<PaginationResponseDTO<PresenceResponseDTO>> getAllPresence(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
+            @RequestParam(defaultValue = "asc") Long lesson
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(presenceService.getAllPresences(page, size, sortBy, direction));
+        return ResponseEntity.status(HttpStatus.OK).body(presenceService.getAllPresences(page, size, lesson));
     }
 
     @GetMapping(path = "{id}")

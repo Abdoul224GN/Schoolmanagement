@@ -22,10 +22,9 @@ public class LessonController {
     public ResponseEntity<PaginationResponseDTO<LessonResponseDTO>> getAllLessons(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
+            @RequestParam() Long classeID
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(lessonService.getAllLessons(page, size, sortBy, direction));
+        return ResponseEntity.status(HttpStatus.OK).body(lessonService.getAllLessons(page, size, classeID));
     }
 
     @GetMapping(path = "{id}")

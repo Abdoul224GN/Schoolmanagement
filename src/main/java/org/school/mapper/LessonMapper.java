@@ -12,10 +12,13 @@ public class LessonMapper {
                 .id(lesson.getId())
                 .name(lesson.getName())
                 .day(lesson.getDay())
+                .classeId(lesson.getClasse().getId())
+                .classe(lesson.getClasse().getName())
                 .startTime(lesson.getStartTime())
                 .endTime(lesson.getEndTime())
                 .createdAt(lesson.getCreatedAt())
-                .subject(SubjectMapper.toDTO(lesson.getSubject()))
+                .subjectId(lesson.getSubject().getId())
+                .subject(lesson.getSubject().getName())
                 .updatedAt(lesson.getUpdatedAt()).build();
     }
 
@@ -25,7 +28,7 @@ public class LessonMapper {
         lesson.setDay(dto.day());
         lesson.setStartTime(dto.startTime());
         lesson.setEndTime(dto.endTime());
-        lesson.setSubject(subjectRepository.findById(dto.subjectId()).orElseThrow(()-> new ResourceNotFoundException("Leçon ")));
+        lesson.setSubject(subjectRepository.findById(dto.subjectId()).orElseThrow(() -> new ResourceNotFoundException("Leçon ")));
         return lesson;
     }
 
