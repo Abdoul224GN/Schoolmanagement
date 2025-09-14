@@ -1,12 +1,14 @@
 package org.school.dto;
 
+import org.school.entity.Gender;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public record StudentRequestDTO(
         String firstName,
         String lastName,
-        String sex,
+        Gender sex,
         String address,
         String photo,
         LocalDate birthDate,

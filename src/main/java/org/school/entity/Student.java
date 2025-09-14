@@ -30,7 +30,8 @@ public class Student extends AbstractEntity {
 
     @NotNull
     @Column(name = "sexe", nullable = false, length = Integer.MAX_VALUE)
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    private Gender sex;
 
     @NotNull
     @Column(name = "date_naissance", nullable = false)

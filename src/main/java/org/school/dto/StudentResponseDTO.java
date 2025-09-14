@@ -1,6 +1,7 @@
 package org.school.dto;
 
 import lombok.Builder;
+import org.school.entity.Gender;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +14,7 @@ public record StudentResponseDTO(
         Long id,
         String firstName,
         String lastName,
-        String sex,
+        Gender sex,
         String address,
         String photo,
         LocalDate birthDate,
