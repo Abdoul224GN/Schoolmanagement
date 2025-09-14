@@ -16,6 +16,7 @@ public record LessonRequestDTO(
         LocalDate day,
         LocalTime startTime,
         LocalTime endTime,
-        Long subjectId
+        Long subjectId,
+        Long classeId
 ) {
 }

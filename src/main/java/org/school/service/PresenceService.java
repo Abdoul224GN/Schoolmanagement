@@ -17,6 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class PresenceService {
@@ -57,4 +60,15 @@ public class PresenceService {
         presenceRepository.deleteById(id);
     }
 
+    public List<PresenceResponseDTO> createPresences(List<PresenceRequestDTO> presenceRequestDTOs) {
+        List<Presence> presences = presenceRequestDTOs.stream()
+                .map(dto -> PresenceMapper.toEntity(dto, studentRepository, lessonRepository))
+                .collect(Collectors.toList());
+
+        List<Presence> savedPresences = presenceRepository.saveAll(presences);
+
+        return savedPresences.stream()
+                .map(PresenceMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

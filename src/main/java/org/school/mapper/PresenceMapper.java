@@ -24,7 +24,7 @@ public class PresenceMapper {
         Presence presence = new Presence();
         presence.setIsPresent(dto.isPresent());
         presence.setComment(dto.comment());
-        Student student = studentRepository.findById(dto.studentId()).orElseThrow(() -> new ResourceNotFoundException("Elève non trouvé"));
+        Student student = studentRepository.findById(dto.studentId()).orElseThrow(() -> new ResourceNotFoundException("Elève no trouvé"));
         presence.setStudent(student);
         Lesson lesson = lessonRepository.findById(dto.lessonId()).orElseThrow(()-> new ResourceNotFoundException("Lesson non trouvé"));
         presence.setLesson(lesson);

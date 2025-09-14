@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "api/presence")
 @AllArgsConstructor
@@ -34,6 +36,13 @@ public class PresenceController {
     public ResponseEntity<PresenceResponseDTO> createPresence(@RequestBody PresenceRequestDTO presenceRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(presenceService.createPresence(presenceRequestDTO));
     }
+    @PostMapping("/batch")
+    public ResponseEntity<List<PresenceResponseDTO>> createPresences(
+            @RequestBody List<PresenceRequestDTO> presenceRequestDTOs) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(presenceService.createPresences(presenceRequestDTOs));
+    }
+
 
     @DeleteMapping(path = "{id}")
     public ResponseEntity<Void> deletePresence(@PathVariable Long id) {

@@ -8,6 +8,7 @@ import org.school.entity.Lesson;
 import org.school.entity.Subject;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.LessonMapper;
+import org.school.repository.ClasseRepository;
 import org.school.repository.LessonRepository;
 import org.school.repository.SubjectRepository;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class LessonService {
 
+    private final ClasseRepository classeRepository;
     LessonRepository lessonRepository;
     SubjectRepository subjectRepository;
 
@@ -46,7 +48,7 @@ public class LessonService {
     }
 
     public LessonResponseDTO createLesson(LessonRequestDTO lessonRequestDTO) {
-        Lesson lesson = LessonMapper.toEntity(lessonRequestDTO, subjectRepository);
+        Lesson lesson = LessonMapper.toEntity(lessonRequestDTO, subjectRepository, classeRepository);
         return LessonMapper.toDTO(lessonRepository.save(lesson));
     }
 
