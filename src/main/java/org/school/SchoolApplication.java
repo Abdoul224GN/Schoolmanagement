@@ -10,30 +10,21 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 @EnableJpaAuditing
 @AllArgsConstructor
-public class SchoolApplication {
-
-    private final LessonRepository lessonRepository;
-    private final LessonService lessonService;
-    private final ClasseRepository classRepository;
-    private final GradeRepository gradeRepository;
-    private final ParentRepository parentRepository;
-    private final ParentService parentService;
-    private final PresenceRepository presenceRepository;
-    private final PresenceService presenceService;
-    StudentRepository studentRepository;
-    TeacherRepository teacherRepository;
-    SubjectRepository subjectRepository;
-    TeacherService teacherService;
-    SubjectService subjectService;
-    ClasseService classeService;
-    StudentService studentService;
+public class SchoolApplication implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        System.out.println(encoder.encode("admin123"));
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(SchoolApplication.class, args);
     }
+
 
 }

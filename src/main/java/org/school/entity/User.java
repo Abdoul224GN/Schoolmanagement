@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
-public class User extends AbstractEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -25,15 +25,13 @@ public class User extends AbstractEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @NotNull
-    @Column(name = "role", nullable = false, length = 50)
+    @Column(name = "role", length = 50)
     private String role;
 
-    @NotNull
-    @Column(name = "account_type", nullable = false, length = 50)
+    @Column(name = "account_type", length = 50)
     private String accountType;
 
-    @NotNull
+
     @Column(name = "account_id", nullable = false)
     private Long accountId;
 
