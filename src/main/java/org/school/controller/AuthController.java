@@ -1,6 +1,10 @@
 package org.school.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.school.dto.LoginRequestDTO;
+import org.school.entity.User;
+import org.school.repository.UserRepository;
+import org.school.service.AccountResolverService;
 import org.school.service.JWTService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,15 +18,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final AccountResolverService accountResolverService;
 
-    public AuthController(JWTService jwtService, AuthenticationManager authenticationManager) {
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-    }
 
     @GetMapping("/hello")
     public String message() {
@@ -30,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<Map<String, String>> authenticate(@RequestBody LoginRequestDTO loginRequestDTO) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequestDTO.username(),
@@ -38,15 +41,23 @@ public class AuthController {
         );
 
         String token = jwtService.generateToken(authentication);
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @GetMapping("/me")
     public Map<String, Object> me(@AuthenticationPrincipal Jwt jwt) {
+        String username = jwt.getClaimAsString("username");
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Object account = accountResolverService.resolveAccount(user);
+
         return Map.of(
                 "token", jwt.getTokenValue(),
-                "username", jwt.getClaimAsString("username"),
-                "role", jwt.getClaimAsString("role")
+                "username", user.getUsername(),
+                "role", user.getRole(),
+                "account", account
         );
     }
 }
