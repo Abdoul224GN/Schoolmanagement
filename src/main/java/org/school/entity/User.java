@@ -28,8 +28,9 @@ public class User {
     @Column(name = "role", length = 50)
     private String role;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "account_type", length = 50)
-    private String accountType;
+    private Account accountType;
 
 
     @Column(name = "account_id", nullable = false)

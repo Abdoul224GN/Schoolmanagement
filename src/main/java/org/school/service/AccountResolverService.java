@@ -1,10 +1,7 @@
 package org.school.service;
 
 import org.school.dto.UserResponseDTO;
-import org.school.entity.Parent;
-import org.school.entity.Student;
-import org.school.entity.Teacher;
-import org.school.entity.User;
+import org.school.entity.*;
 import org.school.exception.ResourceNotFoundException;
 import org.school.repository.ParentRepository;
 import org.school.repository.StudentRepository;
@@ -26,7 +23,7 @@ public class AccountResolverService {
 
     public UserResponseDTO resolveAccount(User user) {
 
-        if ("Student".equalsIgnoreCase(user.getAccountType())) {
+        if (Account.STUDENT == (user.getAccountType())) {
             Student student = studentRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
             return UserResponseDTO.builder()
                     .id(student.getId())
@@ -34,7 +31,7 @@ public class AccountResolverService {
                     .lastName(student.getLastName())
                     .entity("Student")
                     .build();
-        } else if ("Teacher".equalsIgnoreCase(user.getAccountType())) {
+        } else if (Account.TEACHER == (user.getAccountType())) {
             Teacher teacher = teacherRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Teacher not found"));
             return UserResponseDTO.builder()
                     .id(teacher.getId())
@@ -42,7 +39,7 @@ public class AccountResolverService {
                     .lastName(teacher.getLastName())
                     .entity("Teacher")
                     .build();
-        } else if ("Parent".equalsIgnoreCase(user.getAccountType())) {
+        } else if (Account.PARENT == (user.getAccountType())) {
             Parent parent = parentRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Parent not found"));
             return UserResponseDTO.builder()
                     .id(parent.getId())
