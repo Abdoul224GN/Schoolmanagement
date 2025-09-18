@@ -15,9 +15,10 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user) {
         this.user = user;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
     }
 
     @Override

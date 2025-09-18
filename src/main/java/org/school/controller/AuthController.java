@@ -6,6 +6,7 @@ import org.school.entity.User;
 import org.school.repository.UserRepository;
 import org.school.service.AccountResolverService;
 import org.school.service.JWTService;
+import org.school.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final AccountResolverService accountResolverService;
+    private final UserService userService;
 
 
     @GetMapping("/hello")
@@ -42,6 +44,12 @@ public class AuthController {
 
         String token = jwtService.generateToken(authentication);
         return ResponseEntity.ok(Map.of("token", token));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Void> register(@RequestBody User user) {
+        userService.createUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
