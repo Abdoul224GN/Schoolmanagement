@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.school.dto.PaginationResponseDTO;
 import org.school.dto.ParentRequestDTO;
 import org.school.dto.ParentResponseDTO;
+import org.school.dto.StudentResponseDTO;
 import org.school.service.ParentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,11 @@ public class ParentController {
     @GetMapping(path = "{id}")
     public ResponseEntity<ParentResponseDTO> getParent(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(parentService.getParentById(id));
+    }
+
+    @GetMapping("/{parentId}/students")
+    public PaginationResponseDTO<StudentResponseDTO> getStudents(@PathVariable Long parentId) {
+        return parentService.getStudentsByParentId(parentId);
     }
 
     @PostMapping

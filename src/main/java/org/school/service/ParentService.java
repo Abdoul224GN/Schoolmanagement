@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import org.school.dto.PaginationResponseDTO;
 import org.school.dto.ParentRequestDTO;
 import org.school.dto.ParentResponseDTO;
+import org.school.dto.StudentResponseDTO;
 import org.school.entity.Parent;
 import org.school.exception.ResourceNotFoundException;
 import org.school.mapper.ParentMapper;
+import org.school.mapper.StudentMapper;
+import org.school.repository.ParentEleveRepository;
 import org.school.repository.ParentRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,12 +25,19 @@ import java.io.IOException;
 public class ParentService {
     private final FileStorageService fileStorageService;
     ParentRepository parentRepository;
+    ParentEleveRepository parentEleveRepository;
 
     public PaginationResponseDTO<ParentResponseDTO> getAllParents(Integer page, Integer size, String sortBy, String direction) {
         Sort sort = direction.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<ParentResponseDTO> result = parentRepository.findAll(pageable).map(ParentMapper::toDTO);
         return new PaginationResponseDTO<>(result);
+    }
+
+    public PaginationResponseDTO<StudentResponseDTO> getStudentsByParentId(Long parentId) {
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<StudentResponseDTO> page = parentEleveRepository.findStudentsByParentId(parentId, pageable).map(StudentMapper::toResponseDTO);
+        return new PaginationResponseDTO<>(page);
     }
 
     public PaginationResponseDTO<ParentResponseDTO> searchByName(String name) {
