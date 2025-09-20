@@ -7,7 +7,9 @@ import org.school.dto.ExportCriteria;
 import org.school.entity.Parent;
 import org.school.entity.ParentEleve;
 import org.school.entity.Student;
+import org.school.entity.Teacher;
 import org.school.repository.StudentRepository;
+import org.school.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -19,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ExportService {
 
+    private final TeacherRepository teacherRepository;
     StudentService studentService;
     StudentRepository studentRepository;
 
@@ -116,6 +119,62 @@ public class ExportService {
                 }
             }
             for (int i = 0; i < allColumns.size(); i++) sheet.autoSizeColumn(i);
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            return out.toByteArray();
+        }
+    }
+
+    public byte[] exportTeachersToExcel(ExportCriteria criteria) throws IOException {
+        List<Teacher> teachers = teacherRepository.findAll().stream()
+                .toList();
+
+        List<String> columns = criteria.columns();
+        if (columns == null || columns.isEmpty()) {
+            columns = List.of("id", "firstName", "lastName", "sex", "birthDate", "phone", "email");
+        }
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Teachers");
+
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font font = workbook.createFont();
+            font.setBold(true);
+            font.setColor(IndexedColors.BLACK.getIndex());
+            headerStyle.setFont(font);
+
+            Row header = sheet.createRow(0);
+            for (int i = 0; i < columns.size(); i++) {
+                Cell cell = header.createCell(i);
+                cell.setCellValue(columns.get(i));
+                cell.setCellStyle(headerStyle);
+            }
+
+            int rowIdx = 1;
+            for (Teacher t : teachers) {
+                Row row = sheet.createRow(rowIdx++);
+                int col = 0;
+
+                for (String c : columns) {
+                    switch (c) {
+                        case "id" -> row.createCell(col++).setCellValue(t.getId());
+                        case "firstName" -> row.createCell(col++).setCellValue(t.getFirstName());
+                        case "lastName" -> row.createCell(col++).setCellValue(t.getLastName());
+                        case "sex" -> row.createCell(col++).setCellValue(t.getSex());
+                        case "birthDate" ->
+                                row.createCell(col++).setCellValue(t.getBirthDate() != null ? t.getBirthDate().toString() : "");
+                        case "phone" ->
+                                row.createCell(col++).setCellValue(t.getPhone() != null ? t.getPhone() : "");
+                        case "email" ->
+                                row.createCell(col++).setCellValue(t.getEmail() != null ? t.getEmail() : "");
+                    }
+                }
+            }
+
+            for (int i = 0; i < columns.size(); i++) {
+                sheet.autoSizeColumn(i);
+            }
 
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             workbook.write(out);

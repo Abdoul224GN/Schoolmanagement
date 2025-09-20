@@ -29,4 +29,14 @@ public class ExportController {
                 .body(excelData);
     }
 
+    @PostMapping("/teachers/xlsx")
+    public ResponseEntity<byte[]> exportTeachers(@RequestBody ExportCriteria criteria) throws IOException {
+        byte[] excelData = exportService.exportTeachersToExcel(criteria);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=teachers.xlsx")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(excelData);
+    }
+
 }
