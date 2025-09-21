@@ -16,10 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableJpaAuditing
 @AllArgsConstructor
 public class SchoolApplication implements CommandLineRunner {
+    private final UserService userService;
     @Override
     public void run(String... args) throws Exception {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        System.out.println(encoder.encode("admin123"));
     }
 
     public static void main(String[] args) {

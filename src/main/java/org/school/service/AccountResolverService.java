@@ -27,7 +27,8 @@ public class AccountResolverService {
             Student student = studentRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
             return UserResponseDTO.builder()
                     .id(student.getId())
-                    .firstName(student.getLastName())
+                    .username(user.getUsername())
+                    .firstName(student.getFirstName())
                     .lastName(student.getLastName())
                     .entity("Student")
                     .build();
@@ -35,7 +36,8 @@ public class AccountResolverService {
             Teacher teacher = teacherRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Teacher not found"));
             return UserResponseDTO.builder()
                     .id(teacher.getId())
-                    .firstName(teacher.getLastName())
+                    .username(user.getUsername())
+                    .firstName(teacher.getFirstName())
                     .lastName(teacher.getLastName())
                     .entity("Teacher")
                     .build();
@@ -43,11 +45,12 @@ public class AccountResolverService {
             Parent parent = parentRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Parent not found"));
             return UserResponseDTO.builder()
                     .id(parent.getId())
-                    .firstName(parent.getLastName())
+                    .username(user.getUsername())
+                    .firstName(parent.getFirstName())
                     .lastName(parent.getLastName())
                     .entity("Parent")
                     .build();
         }
-        return null;
+        throw new ResourceNotFoundException("Unknown account type: " + user.getAccountType());
     }
 }

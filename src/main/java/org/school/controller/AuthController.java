@@ -2,11 +2,14 @@ package org.school.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.school.dto.LoginRequestDTO;
+import org.school.dto.PaginationResponseDTO;
+import org.school.dto.UserResponseDTO;
 import org.school.entity.User;
 import org.school.repository.UserRepository;
 import org.school.service.AccountResolverService;
 import org.school.service.JWTService;
 import org.school.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,6 +53,13 @@ public class AuthController {
     public ResponseEntity<Void> register(@RequestBody User user) {
         userService.createUser(user);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/users")
+    public ResponseEntity<PaginationResponseDTO<UserResponseDTO>> getAllUser(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers(page, size));
     }
 
     @GetMapping("/me")
