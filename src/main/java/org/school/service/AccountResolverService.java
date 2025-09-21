@@ -27,6 +27,7 @@ public class AccountResolverService {
             Student student = studentRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
             return UserResponseDTO.builder()
                     .id(student.getId())
+                    .userId(user.getId())
                     .username(user.getUsername())
                     .firstName(student.getFirstName())
                     .lastName(student.getLastName())
@@ -36,6 +37,7 @@ public class AccountResolverService {
             Teacher teacher = teacherRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Teacher not found"));
             return UserResponseDTO.builder()
                     .id(teacher.getId())
+                    .userId(user.getId())
                     .username(user.getUsername())
                     .firstName(teacher.getFirstName())
                     .lastName(teacher.getLastName())
@@ -45,6 +47,7 @@ public class AccountResolverService {
             Parent parent = parentRepository.findById(user.getAccountId()).orElseThrow(() -> new ResourceNotFoundException("Parent not found"));
             return UserResponseDTO.builder()
                     .id(parent.getId())
+                    .userId(user.getId())
                     .username(user.getUsername())
                     .firstName(parent.getFirstName())
                     .lastName(parent.getLastName())

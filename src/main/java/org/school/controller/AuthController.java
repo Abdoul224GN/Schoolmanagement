@@ -62,6 +62,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers(page, size));
     }
 
+    @DeleteMapping(path = "/api/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/me")
     public Map<String, Object> me(@AuthenticationPrincipal Jwt jwt) {
         String username = jwt.getClaimAsString("username");
