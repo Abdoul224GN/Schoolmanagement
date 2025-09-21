@@ -17,7 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,5 +72,22 @@ public class PresenceService {
         return savedPresences.stream()
                 .map(PresenceMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public Map<LocalDate, Double> getPresenceStatsLast7Days() {
+        LocalDate startDate = LocalDate.now().minusDays(6);
+        List<Lesson> lessons = lessonRepository.findLessonsWithPresenceLast7Days(startDate);
+
+        return lessons.stream()
+                .collect(Collectors.groupingBy(
+                        Lesson::getDay,
+                        Collectors.averagingDouble(l -> {
+                            long total = l.getPresences().size();
+                            long presents = l.getPresences().stream()
+                                    .filter(Presence::getIsPresent)
+                                    .count();
+                            return total > 0 ? (presents * 100.0 / total) : 0.0;
+                        })
+                ));
     }
 }

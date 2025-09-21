@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "api/presence")
@@ -36,6 +38,7 @@ public class PresenceController {
     public ResponseEntity<PresenceResponseDTO> createPresence(@RequestBody PresenceRequestDTO presenceRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(presenceService.createPresence(presenceRequestDTO));
     }
+
     @PostMapping("/batch")
     public ResponseEntity<List<PresenceResponseDTO>> createPresences(
             @RequestBody List<PresenceRequestDTO> presenceRequestDTOs) {
@@ -53,5 +56,10 @@ public class PresenceController {
     @PutMapping(path = "{id}")
     public ResponseEntity<PresenceResponseDTO> updatePresence(@PathVariable Long id, @RequestBody PresenceRequestDTO presenceRequestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(presenceService.updatePresence(id, presenceRequestDTO));
+    }
+
+    @GetMapping("statistique/last7days")
+    public Map<LocalDate, Double> getPresenceStatsLast7Days() {
+        return presenceService.getPresenceStatsLast7Days();
     }
 }
