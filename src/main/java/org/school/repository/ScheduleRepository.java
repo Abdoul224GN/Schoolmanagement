@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
+public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     List<Schedule> findByClasseId(Long classeId);
 
     List<Schedule> findByTeacherId(Long teacherId);
